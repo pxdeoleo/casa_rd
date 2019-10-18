@@ -1,0 +1,9 @@
+usuario normal
+--------------
+usuario->user
+contraseña->pass
+-------------
+adminiastrador en ruta /admin
+--------------
+usuario->admin
+contraseña->admin
