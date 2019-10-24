@@ -1,4 +1,5 @@
 <?php
+session_start();
 $base = base_url('base');
 // $galerias = base_url('galerias');
 ?>
@@ -37,12 +38,27 @@ $base = base_url('base');
                     <a href="mailto:contact@southtemplate.com">contact@casasrd.com</a>
                 </div>
                 <div class="phone-number d-flex">
-                    <div class="icon">
-                        <img src="<?=$base?>/img/icons/phone-call.png" alt="">
-                    </div>
-                    <div class="number">
-                        <a href="tel:+45 677 8993000 223">+1 809 555 5555</a>
-                    </div>
+                    <?php
+                    if(isset($_SESSION['user'])){
+                        $logoff_url = base_url("cuenta/logoff");
+                        $user = $_SESSION['user'];
+                        echo<<<LOGOFF
+                        <div class="icon">
+                            <a href="{$logoff_url}"><img src="{$base}/img/icons/logout.png" alt=""></a>         
+                        </div>
+                        <div class="number">
+                            <a href="#">Bienvenido, {$user}</a>
+                        </div>
+LOGOFF;
+                    }else{
+                        $login_url = base_url("cuenta/login");
+                        echo<<<LOGIN
+                        <div class="number">
+                            <a href="{$login_url}">Iniciar Sesion</a>
+                        </div>
+LOGIN;
+                    }
+                    ?>
                 </div>
             </div>
         </div>
@@ -88,7 +104,7 @@ $base = base_url('base');
                             </div>
 
                             <!-- Search Button -->
-                            <a href="#" class="searchbtn"><i class="fa" aria-hidden="true"></i></a>
+                            <!-- <a href="#" class="searchbtn"><i class="fa" aria-hidden="true"></i></a> -->
                         </div>
                         <!-- Nav End -->
                     </div>

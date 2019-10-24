@@ -1,9 +1,55 @@
 <?php
-session_start();	//Session
 plantilla::aplicar();
 $base = base_url('base');
-?>
+$isFilter = false;
+function PostFiltro(){
+    $filtro = new stdClass();
+    $filtro->keyword = $_POST['keyword'];
+    $filtro->ciudad = $_POST['ciudad'];
+    $filtro->hab =$_POST['hab'];
+    $filtro->banos = $_POST['banos'];
+    $filtro->minArea = $_POST['min_area'];
+    $filtro->maxArea = $_POST['max_area'];
+    $filtro->minPrecio= $_POST['min_precio'];
+    $filtro->maxPrecio= $_POST['max_precio'];   
+    $filtro->categoria = $_POST['categoria'];
+    return $filtro;
+}
+function getFiltro(){
+    $filtro = new stdClass();
+    $filtro->keyword = $_GET['keyword'];
+    $filtro->ciudad = $_GET['ciudad'];
+    $filtro->hab =$_GET['hab'];
+    $filtro->banos = $_GET['banos'];
+    $filtro->minArea = $_GET['min_area'];
+    $filtro->maxArea = $_GET['max_area'];
+    $filtro->minPrecio= $_GET['min_precio'];
+    $filtro->maxPrecio= $_GET['max_precio'];   
+    $filtro->categoria = $_GET['categoria'];
+    return $filtro;
+}
+if($_POST){
+    $propiedades = $this->propiedad_model->filtrarPropiedades(getFiltroPost());
+}
+else{
+    if((isset($_GET['keyword']) && $_GET['keyword']!= "") || 
+    (isset($_GET['ciudad']) && 
+    $_GET['ciudad']!= "Todas las ciudades") || 
+    (isset($_GET['hab']) && $_GET['hab'] != "Dormitorios")  || 
+    (isset($_GET['banos'])  && $_GET['banos'] != "Baños")|| 
+    (isset($_GET['min_area']) && $_GET['min_area'] > 0)|| 
+    (isset($_GET['max_area'])  && $_GET['max_area'] > 0)|| 
+    (isset($_GET['min_precio']) && $_GET['min_precio'] > 0) || 
+    (isset($_GET['max_precio']) && $_GET['max_precio']>0)|| 
+    (isset($_GET['categoria']) && 
+     $_GET['categoria'] != "Todos los tipos")){
+        $isFilter = true;
+    }else{
+        $isFilter = false;
+    }
+}
 
+?>
     <!-- ##### Breadcumb Area Start ##### -->
     <section class="breadcumb-area bg-img" style="background-image: url(<?=$base?>/img/bg-img/hero1.jpg);">
         <div class="container h-100">
@@ -26,22 +72,22 @@ $base = base_url('base');
                     <div class="advanced-search-form">
                         <!-- Search Title -->
                         <div class="search-title">
-                            <p>Busca tu hogar</p>
+                           <p><a href="propiedades" style="color: whitesmoke; font-size: 20px;" type="submit">Busca tu hogar</a></p> 
                         </div>
                         <!-- Search Form -->
-                        <form action="" method="post" id="advanceSearch">
+                        <form action="" method="get" id="advanceSearch">
                             <div class="row">
 
                                 <div class="col-12 col-md-4 col-lg-3">
                                     <div class="form-group">
-                                        <input type="input" class="form-control" name="busqueda" placeholder="Palabra clave">
+                                        <input type="input" class="form-control" name="keyword" placeholder="Palabra clave">
                                     </div>
                                 </div>
 
                                 <div class="col-12 col-md-4 col-lg-3">
                                     <div class="form-group">
-                                        <select class="form-control" id="cities">
-                                            <option>Todas las ciudades</option>
+                                        <select class="form-control" id="ciudad" name="ciudad">
+                                            <option value = "*">Todas las ciudades</option>
                                             <?php
                                             $propiedades = $this->propiedad_model->ciudades();
                                             foreach ($propiedades as $key => $value) {
@@ -54,8 +100,8 @@ $base = base_url('base');
 
                                 <div class="col-12 col-md-4 col-xl-2">
                                     <div class="form-group">
-                                        <select class="form-control" id="bedrooms">
-                                            <option>Dormitorios</option>
+                                        <select class="form-control" id="hab" name="hab">
+                                            <option  value = "*">Dormitorios</option>
                                             <?php
                                             $dormitorios = $this->propiedad_model->dormitorios();
                                             foreach ($dormitorios as $key => $value) {
@@ -68,8 +114,8 @@ $base = base_url('base');
 
                                 <div class="col-12 col-md-4 col-xl-2">
                                     <div class="form-group">
-                                        <select class="form-control" id="bathrooms">
-                                            <option>Baños</option>
+                                        <select class="form-control" id="banos" name="banos">
+                                            <option  value = "*">Baños</option>
                                             <?php
                                             $banos = $this->propiedad_model->banos();
                                             foreach ($banos as $key => $value) {
@@ -122,15 +168,14 @@ $base = base_url('base');
 
                                 <div class="col-12 col-md-4 col-lg-3">
                                             <div class="form-group">
-                                                <select class="form-control" id="types">
-                                                    <option>Todos los tipos</option>
-                                                    
+                                                <select class="form-control" id="categoria" name="categoria">
+                                                    <option  value = "*">Todos los tipos</option>
                                                     <?php
                                                     $tipos = $this->propiedad_model->cont_tipos();
                                                     foreach ($tipos as $key => $value) {
                                                         $nombre = ucfirst($value['nombre']);
                                                         echo<<<TIPOS
-                                                        <option value="{$value['id_categoria']}">{$nombre} <span>({$value['contador']})</span></option>
+                                                        <option data-value="{$value['id']}" value="{$value['id']}">{$nombre} <span>({$value['contador']})</span></option>
 TIPOS;}
                                                     ?>
                                                 </select>
@@ -177,57 +222,40 @@ TIPOS;}
             <div class="row">
 
             <?php
-                    $propiedades = $this->propiedad_model->ultPropiedades();
+           
+            if($isFilter){
+                $propiedades = $this->propiedad_model->filtrarPropiedades(getFiltro());
+                if(count($propiedades)> 0){
                     foreach ($propiedades as $key => $value) {
+                        $base = base_url('base');
                         if ($value['id_categoria'] == 1) {
                             $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
                         }elseif ($value['id_categoria'] == 2) {
                             $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
+                        }else{
+                            $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
                         }
-
-                    echo<<<PROPIEDAD
-                    <!-- Single Featured Property -->
-                <div class="col-12 col-md-6 col-xl-4">
-                    <div class="single-featured-property mb-50 wow fadeInUp" data-wow-delay="100ms">
-                        <!-- Property Thumbnail -->
-                        <div class="property-thumb">
-                            <img src="{$base}/img/bg-img/feature1.jpg" alt="">
-
-                            <div class="tag">
-                                <span>Disponible</span>
-                            </div>
-                            <div class="list-price">
-                                <p>{$value['precio']}</p>
-                            </div>
-                        </div>
-                        <!-- Property Content -->
-                        <div class="property-content">
-                            <h5>{$value['nombre']}</h5>
-                            <p class="location"><img src="{$base}/img/icons/location.png" alt="">{$value['direccion']}</p>
-                            <p>{$value['descripcion']}</p>
-                            <div class="property-meta-data d-flex align-items-end justify-content-between">
-                                <div class="new-tag">
-                                    {$tipo}
-                                </div>
-                                <div class="bathroom">
-                                    <img src="{$base}/img/icons/bathtub.png" alt="">
-                                    <span>{$value['banos']}</span>
-                                </div>
-                                <div class="garage">
-                                    <img src="{$base}/img/icons/garage.png" alt="">
-                                    <span>{$value['par']}</span>
-                                </div>
-                                <div class="space">
-                                    <img src="{$base}/img/icons/space.png" alt="">
-                                    <span>{$value['area']} m²</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>        
-                    
-PROPIEDAD;
+                        $this->propiedad_model->showCard($value,$tipo);
                     }
+                }else{
+                    echo <<<ERROR
+                    <h1>No se encontraron propiedades</h1> 
+                    ERROR;
+                }
+            }
+            else
+            {
+                $propiedades = $this->propiedad_model->ultPropiedades();
+                foreach ($propiedades as $key => $value) {
+                    $base = base_url('base');
+                    if ($value['id_categoria'] == 1) {
+                        $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
+                    }elseif ($value['id_categoria'] == 2) {
+                        $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
+                    }
+                    $this->propiedad_model->showCard($value,$tipo);
+                }
+            }
                 ?>
 
             </div>

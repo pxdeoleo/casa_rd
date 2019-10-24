@@ -1,5 +1,4 @@
 <?php
-session_start();
 plantilla::aplicar();
 $base = base_url('base');
 $id_propiedad = $this->uri->segment(3);

@@ -1,7 +1,4 @@
 <?php
-session_start();	//Session
-//---------------------------
-
 plantilla::aplicar();
 $base = base_url('base');
 

@@ -7,10 +7,12 @@ class Main extends CI_Controller {
     public function index()
     {
         $this->load->model('propiedad_model');
-        $this->load->model('ciudad_model');
 
         $this->load->view('inicio');
     }
+
+    
+
 
 }
 

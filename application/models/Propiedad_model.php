@@ -18,6 +18,17 @@ class Propiedad_model extends CI_Model {
         
         return $propiedades;
     }
+    
+    public function propiedades_dest(){
+        $CI =& get_instance();
+
+        $propiedades = $CI->db
+        ->order_by('fecha, ', 'DESC')
+        ->get('propiedades')
+        ->result_array();
+        
+        return $propiedades;
+    }
 
     public function propiedad_x_id($id_propiedad){
         $CI =& get_instance();
@@ -26,6 +37,11 @@ class Propiedad_model extends CI_Model {
         ->where("id", $id_propiedad)
         ->get('propiedades')
         ->result_array();
+
+        $CI->db
+        ->set('visitas', 'visitas+1', FALSE)
+        ->where('id', $id_propiedad)
+        ->update('propiedades');
 
         return $propiedad;
     }
@@ -92,7 +108,7 @@ class Propiedad_model extends CI_Model {
         $CI =& get_instance();
 
         $tipos = $CI->db
-        ->query("SELECT categorias.nombre as nombre, COUNT(*) as contador FROM propiedades
+        ->query("SELECT categorias.id as id, categorias.nombre as nombre, COUNT(*) as contador FROM propiedades
         JOIN categorias ON categorias.id = propiedades.id_categoria GROUP BY id_categoria")
         ->result_array();
 
@@ -112,78 +128,89 @@ class Propiedad_model extends CI_Model {
         return $propiedades;
     }
 
-    // public function guardarNoticia($noticia, $foto){
-    //     // if($_FILES["archivo"]["type"][$i]=="image/jpeg" || $_FILES["archivo"]["type"][$i]=="image/pjpeg" || $_FILES["archivo"]["type"][$i]=="image/gif" || $_FILES["archivo"]["type"][$i]=="image/png"){
-    //     date_default_timezone_set ('America/Santo_Domingo');
-    //     if(!is_string($foto)){
-    //         $CI =& get_instance();
-    //         $maxid = $CI->db->query('SELECT MAX(id_noticia) FROM noticias')->result_array()[0]['MAX(id_noticia)'];
-            
-    //         $ruta="fotos/noticias/";//ruta carpeta donde queremos copiar las imágenes
-    //         $uploadfile_temporal=$foto['tmp_name'];
-                
-    
-    //         if($foto["type"]=="image/jpeg") 
-    //         {
-    //             $uploadfile_nombre = ($maxid+1).'.jpg';
-    
-    //         }
-    //         else if($foto["type"]=="image/pjpeg")
-    //         {
-    //             $uploadfile_nombre = ($maxid+1).'.jpeg';       
-           
-    //         }
-    //         else if($foto["type"]=="image/gif")
-    //         {
-    //             $uploadfile_nombre = ($maxid+1).'.gif';       
-    
-    //         }
-    //         else if($foto["type"]=="image/png"){
-    //             $uploadfile_nombre = ($maxid+1).'.png';       
-    
-    //         }
-    
-        
-    //         move_uploaded_file($uploadfile_temporal, $ruta.$uploadfile_nombre);
-    //     }else{
-    //         $uploadfile_nombre = $foto;
-    //     }
-        
-        
-    //     $CI =& get_instance();
+    public function nuevo_filtro(){
+        $filtro = new stdclass();
+        $filtro->keyword = "";
+        $filtro->ciudad="";
+        $filtro->hab = "";
+        $filtro->banos = "";
+        $filtro->minArea = 0;
+        $filtro->maxArea = 0;
+        $filtro->minPrecio= 0;
+        $filtro->maxPrecio= 0;   
+        $filtro->categoria = 0;
+    }
+    public function filtrarPropiedades($filtro){
+        $CI =& get_instance();
+        $areas = ('area between '.$filtro->minArea.' and '.$filtro->maxArea);
+        $precios = ('precio between '.$filtro->minPrecio.' and '.$filtro->maxPrecio);
+        $propiedades = $CI->db
+        ->distinct()
+        ->order_by('fecha','DESC')
+        ->where('ciudad =', $filtro->ciudad)
+        ->or_where('hab =', $filtro->hab)
+        ->or_where('banos =', $filtro->banos)
+        // ->or_where($areas)
+        // ->or_where($precios)
+        ->or_where('id_categoria =', $filtro->categoria)
+        ->get('propiedades')
+        ->result_array();
 
-    //     if(isset($noticia['id_noticia'])){
-    //         $CI->db->replace('noticias', array(
-    //             'id_noticia'=>$noticia['id_noticia'],
-    //             'asunto'=>$noticia['asunto'],
-    //             'contenido'=>$noticia['contenido'],
-    //             'foto'=>$uploadfile_nombre,
-    //             'fecha'=>date('Y-m-d')
-    //         ));
-    //     }else{
-    //         $CI->db->replace('noticias', array(
-    //             'asunto'=>$noticia['asunto'],
-    //             'contenido'=>$noticia['contenido'],
-    //             'foto'=>$uploadfile_nombre,
-    //             'fecha'=>date('Y-m-d')
-    //         ));
-    //     }
+        return $propiedades;
+    }
 
-        
-        
-    // }
+    function showCard($value,$tipo){
+        $base = base_url('base');
+        if ($value['id_categoria'] == 1) {
+            $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
+        }elseif ($value['id_categoria'] == 2) {
+            $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
+        }
+echo<<<PROPIEDAD
+                    <!-- Single Featured Property -->
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="single-featured-property mb-50 wow fadeInUp" data-wow-delay="100ms">
+                        <!-- Property Thumbnail -->
+                        <div class="property-thumb">
+                            <img src="{$base}/img/bg-img/feature1.jpg" alt="">
 
-    // public function borrar_noticia($id_noticia){
-        
-    //     $CI =& get_instance();
-    //     $CI->db
-    //     ->delete('noticias', array('id_noticia' => $id_noticia));
-    // }
-    
+                            <div class="tag">
+                                <span>Disponible</span>
+                            </div>
+                            <div class="list-price">
+                                <p>{$value['precio']}</p>
+                            </div>
+                        </div>
+                        <!-- Property Content -->
+                        <div class="property-content">
+                            <h5>{$value['nombre']}</h5>
+                            <p class="location"><img src="{$base}/img/icons/location.png" alt="">{$value['direccion']}</p>
+                            <p>{$value['descripcion']}</p>
+                            <div class="property-meta-data d-flex align-items-end justify-content-between">
+                                <div class="new-tag">
+                                    {$tipo}
+                                </div>
+                                <div class="bathroom">
+                                    <img src="{$base}/img/icons/bathtub.png" alt="">
+                                    <span>{$value['banos']}</span>
+                                </div>
+                                <div class="garage">
+                                    <img src="{$base}/img/icons/garage.png" alt="">
+                                    <span>{$value['par']}</span>
+                                </div>
+                                <div class="space">
+                                    <img src="{$base}/img/icons/space.png" alt="">
+                                    <span>{$value['area']} m²</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>        
+                    
+PROPIEDAD;
+    }
 
 }
-
-/* End of file Noticias_model.php */
 
 
 
