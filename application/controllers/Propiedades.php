@@ -34,6 +34,11 @@ class Propiedades extends CI_Controller {
         redirect('main/propiedad');
     }
 
+    function mis_propiedades(){
+        $this->load->model('propiedad_model');
+        $this->load->view('mis_propiedades');
+    }
+
 }
 
 /* End of file Controllername.php */

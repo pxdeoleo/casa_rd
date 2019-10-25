@@ -3,21 +3,22 @@
 session_start();
 
 if(isset($_POST['user'])){
-  if(Cuenta_model::inicio_sesion($_POST['user'], $_POST['pass'])){
-	$_SESSION['user']=$_POST['user'];
-	$_SESSION['id_usuario']=
-    redirect(base_url(''));
-    $malpass='';
-  }else{
-    $malpass = "Credenciales no coinciden";
-  }
+	$verif_usuario = Cuenta_model::inicio_sesion($_POST['user'], $_POST['pass']);
+	if($verif_usuario[0]){
+		$_SESSION['user']=$_POST['user'];
+		$_SESSION['id_usuario']=$verif_usuario[1];
+		redirect(base_url(''));
+		$malpass='';
+	}else{
+		$malpass = "Credenciales no coinciden";
+	}
 }else{
   $malpass='';
 }
 if(isset($_SESSION['user'])){
   redirect(base_url(''));
 }
-$base = base_url('base');
+$base = base_url('base/login');
 ?>
 <!DOCTYPE html>
 <html lang="en">

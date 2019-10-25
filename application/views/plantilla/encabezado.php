@@ -91,7 +91,13 @@ LOGIN;
                                 <li><a href="<?=base_url()?>">Inicio</a></li>
                                 <li><a href="about-us.html">Acerca</a></li>
                                 <li><a href="<?=base_url('propiedades')?>">Propiedades</a></li>
-                                <!-- <li><a href="blog.html">Blog</a></li> -->
+                                <?php
+                                if(isset($user)){
+                                    echo('<li><a href="'.base_url('propiedades/mis_propiedades').'">Mis Propiedades</a></li>');
+                                    echo('<li><a href="'.base_url('propiedades/agregar').'">Agregar Propiedad</a></li>');
+                                }
+                                ?>
+                                
                                 <li><a href="contact.html">Contacto</a></li>
                             </ul>
 

@@ -128,6 +128,18 @@ class Propiedad_model extends CI_Model {
         return $propiedades;
     }
 
+    public function propiedades_x_usuario($id_usuario){
+        $CI =& get_instance();
+
+        $propiedades = $CI->db
+        ->order_by('fecha', 'DESC')
+        ->where('usuario_id', $id_usuario)
+        ->get('propiedades')
+        ->result_array();
+        
+        return $propiedades;
+    }
+
     public function nuevo_filtro(){
         $filtro = new stdclass();
         $filtro->keyword = "";

@@ -66,7 +66,7 @@ class Cuenta_model extends CI_Model {
         ->result_array();
         var_dump($rs);
         if(count($rs)>0){
-            return true;
+            return array(true, $rs[0]['id']);
         } else {
             return false;
         }
