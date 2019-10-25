@@ -70,7 +70,7 @@ LOGIN;
                 <nav class="classy-navbar justify-content-between" id="southNav">
 
                     <!-- Logo -->
-                    <a class="nav-brand" href="index.html">CasasRD <!-- <img src="<?=$base?>/img/core-img/logo.png" alt="">  --> </a>
+                    <a class="nav-brand" href="<?=base_url("")?>">CasasRD <!-- <img src="<?=$base?>/img/core-img/logo.png" alt="">  --> </a>
 
                     <!-- Navbar Toggler -->
                     <div class="classy-navbar-toggler">
@@ -91,7 +91,7 @@ LOGIN;
                                 <li><a href="<?=base_url()?>">Inicio</a></li>
                                 <li><a href="about-us.html">Acerca</a></li>
                                 <li><a href="<?=base_url('propiedades')?>">Propiedades</a></li>
-                                <li><a href="blog.html">Blog</a></li>
+                                <!-- <li><a href="blog.html">Blog</a></li> -->
                                 <li><a href="contact.html">Contacto</a></li>
                             </ul>
 

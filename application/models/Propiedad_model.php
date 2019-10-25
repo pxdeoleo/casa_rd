@@ -23,7 +23,7 @@ class Propiedad_model extends CI_Model {
         $CI =& get_instance();
 
         $propiedades = $CI->db
-        ->order_by('fecha, ', 'DESC')
+        ->order_by('fecha DESC, visitas DESC')
         ->get('propiedades')
         ->result_array();
         
@@ -148,7 +148,7 @@ class Propiedad_model extends CI_Model {
         ->distinct()
         ->order_by('fecha','DESC')
         ->where('ciudad =', $filtro->ciudad)
-        ->or_where('hab =', $filtro->hab)
+        ->where('hab =', $filtro->hab)
         ->or_where('banos =', $filtro->banos)
         // ->or_where($areas)
         // ->or_where($precios)
@@ -166,13 +166,15 @@ class Propiedad_model extends CI_Model {
         }elseif ($value['id_categoria'] == 2) {
             $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
         }
+        $link = base_url('propiedades/ver/'.$value['id']);
+        
 echo<<<PROPIEDAD
                     <!-- Single Featured Property -->
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="single-featured-property mb-50 wow fadeInUp" data-wow-delay="100ms">
                         <!-- Property Thumbnail -->
                         <div class="property-thumb">
-                            <img src="{$base}/img/bg-img/feature1.jpg" alt="">
+                            <a href="{$link}"> <img src="{$base}/img/bg-img/feature1.jpg" alt=""></a>
 
                             <div class="tag">
                                 <span>Disponible</span>
@@ -190,6 +192,7 @@ echo<<<PROPIEDAD
                                 <div class="new-tag">
                                     {$tipo}
                                 </div>
+                                <span>{$value['hab']} dorm.</span>
                                 <div class="bathroom">
                                     <img src="{$base}/img/icons/bathtub.png" alt="">
                                     <span>{$value['banos']}</span>
@@ -211,8 +214,4 @@ PROPIEDAD;
     }
 
 }
-
-
-
-
 ?>

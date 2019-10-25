@@ -13,6 +13,7 @@ class Propiedades extends CI_Controller {
 
     public function ver($id_propiedad){
         $this->load->model('propiedad_model');
+        $this->load->model('cuenta_model');
         $this->load->view('propiedad',['id_propiedad',$id_propiedad]);
     }
 

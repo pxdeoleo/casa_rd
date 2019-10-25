@@ -197,7 +197,7 @@ TIPOS;}
     <!-- ##### Listing Content Wrapper Area Start ##### -->
     <section class="listings-content-wrapper section-padding-100">
         <div class="container">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-12">
                     <div class="listings-top-meta d-flex justify-content-between mb-100">
                         <div class="view-area d-flex align-items-center">
@@ -217,7 +217,7 @@ TIPOS;}
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="row">
 
@@ -260,7 +260,7 @@ TIPOS;}
 
             </div>
 
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-12">
                     <div class="south-pagination d-flex justify-content-end">
                         <nav aria-label="Page navigation">
@@ -272,7 +272,7 @@ TIPOS;}
                         </nav>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </section>
     <!-- ##### Listing Content Wrapper Area End ##### -->

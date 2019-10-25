@@ -1,18 +1,10 @@
 <?php
 $base = base_url('base');
-$usuario = $this->Usuario_model->nuevo_usuario();
-// $cliente = $this->Usuario_model->nuevo_cliente();
-$msg = "";
-if($_POST){
-        $usuario->nombre = $_POST['usuario'];
-        $usuario->password = $_POST['password'];
+if ($_POST) {
+    $usuario = $_POST;
+    Cuenta_model::guardar_usuario($usuario);
 
-    //Datos Cliente
-    // $cliente->nombre = $_POST['nombre'].$_POST['apellido'];
-    // $cliente->direccion = $_POST['direccion'];
-    // $cliente->fecha = $_POST['fecha'];
-    // $cliente->correo = $_POST['email'];
-    // $cliente->genero = $_POST['genero'];
+    redirect('');
 }
 ?>
 <!DOCTYPE html>
@@ -25,9 +17,9 @@ if($_POST){
 
     <!-- Font Icon -->
     <link rel="stylesheet" href="<?=$base?>/fonts/material-icon/css/material-design-iconic-font.min.css">
-    <link rel="stylesheet" href="<?=$base?>/cssRegistro/style.css">
+
     <!-- Main css -->
-  
+    <link rel="stylesheet" href="<?=$base?>/css/style.css">
 </head>
 <body>
 
@@ -35,7 +27,7 @@ if($_POST){
         <div class="container">
             <div class="signup-content">
                 <div class="signup-img">
-                    <img src="<?=$base?>/img/imgRegister/signup-img.jpg" alt="">
+                    <img src="<?=$base?>/images/signup-img.jpg" alt="">
                 </div>
                 <div class="signup-form">
                     <form method="POST" class="register-form" id="register-form">
@@ -57,62 +49,59 @@ if($_POST){
                         <div class="form-radio">
                             <label for="genero" class="radio-label">Genero :</label>
                             <div class="form-radio-item">
-                                <input type="radio" name="genero" id="masculino" value="Masculino">
-                                <label for="masculino">Hombre</label>
+                                <input type="radio" name="genero" id="male" checked  required>
+                                <label for="male">Hombre</label>
                                 <span class="check"></span>
                             </div>
                             <div class="form-radio-item">
-                                <input type="radio" name="genero" id="femenino" value="Femenino">
-                                <label for="genero">Mujer</label>
+                                <input type="radio" name="genero" id="female">
+                                <label for="female">Mujer</label>
                                 <span class="check"></span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="pais">Pais :</label>
+                                <label for="nacionalidad">Pais :</label>
                                 <div class="form-select">
-                                <input type="text" name="pais" id="pais">
+                                <input type="text" name="nacionalidad" id="nacionalidad" required>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="ciudad">Ciudad :</label>
                                 <div class="form-select">
-                                <input type="text" name="ciudad" id="ciudad">
+                                <input type="text" name="ciudad" id="ciudad" required>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="fecha">Fecha de nacimiento :</label>
-                            <input type="date" name="fecha" id="fecha">
-                        </div>
-                        <div class="form-group">
-                            
-                            <label for="usuario">Usuario :</label>
-                            <input type="text" name="usuario" id="usuario">
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="password">Contraseña :</label>
-                                <div class="form-select">
-                                <input type="password" name="password" id="password" required>
-                                </div>
+                                <label for="telefono">No. Telefono :</label>
+                                <input type="text" name="telefono" id="telefono" required>
                             </div>
                             <div class="form-group">
-                                <label for="confirmpassword">Confirmar Contraseña :</label>
-                                <div class="form-select">
-                                <input type="password" name="confirmpassword" id="confirmpassword" required>
-                            </div>
+                                <label for="cedula">Cédula de Identidad :</label>
+                                <input type="text" name="cedula" id="cedula"  required>
                             </div>
                         </div>
-                        <label style="font-weight: bold; color: red;" id="msg"></label>
                         <div class="form-group">
-                            <label for="email">Email :</label>
-                            <input type="email" name="email" id="email" />
+                            <label for="nombre_empresa">Empresa de Bienes Raíces :</label>
+                            <input type="text" name="nombre_empresa" id="nombre_empresa" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="user">Usuario :</label>
+                            <input type="text" name="user" id="user" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass">Contraseña :</label>
+                            <input type="password" name="pass" id="pass" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="correo">Email :</label>
+                            <input type="email" name="correo" id="correo"  required>
                         </div>
                         <div class="form-submit">
-                            <input type="submit" value="Limpiar campos" class="submit" name="reset" id="reset" />
-                            <input type="submit" value="Enviar" class="submit" name="submit" id="submit" />
+                            <input type="reset" class="submit"  id="reset" />
+                            <input type="submit" class="submit"  id="submit" />
                         </div>
                     </form>
                 </div>
@@ -122,18 +111,7 @@ if($_POST){
     </div>
 
     <!-- JS -->
-    <script>
-        function checkPassword(){
-            ps1 = document.getElementById('password');
-            ps2 = document.getElementById('confirmpassword');
-            document.getElementById('nombre').innerHTML = "kkk";
-            if(ps1 != ps2 ){
-                document.getElementById('msg').innerHTML "klk";
-            }
-            document.getElementById('register-form"').submit();
-        }
-    </script>
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="<?=$base?>/vendor/jquery/jquery.min.js"></script>
+    <script src="<?=$base?>/js/main.js"></script>
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

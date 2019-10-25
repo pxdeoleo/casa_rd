@@ -4,7 +4,8 @@ session_start();
 
 if(isset($_POST['user'])){
   if(Cuenta_model::inicio_sesion($_POST['user'], $_POST['pass'])){
-    $_SESSION['user']=$_POST['user'];
+	$_SESSION['user']=$_POST['user'];
+	$_SESSION['id_usuario']=
     redirect(base_url(''));
     $malpass='';
   }else{

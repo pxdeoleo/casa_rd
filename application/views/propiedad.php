@@ -2,8 +2,7 @@
 plantilla::aplicar();
 $base = base_url('base');
 $id_propiedad = $this->uri->segment(3);
-
-$propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad);
+$propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad)[0];
 ?>
 
 
@@ -42,38 +41,51 @@ $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad);
                     <div class="listings-content">
                         <!-- Price -->
                         <div class="list-price">
-                            <p>$<?=$propiedad[0]['precio']?></p>
+                            <p>$<?=$propiedad['precio']?></p>
                         </div>
-                        <h5><?=$propiedad[0]['nombre']?></h5>
-                        <p class="location"><img src="<?=$base?>/img/icons/location.png" alt=""><?=$propiedad[0]['direccion']?></p>
-                        <p><?=$propiedad[0]['descripcion']?></p>
+                        <h5><?=$propiedad['nombre']?></h5>
+                        <p class="location"><img src="<?=$base?>/img/icons/location.png" alt=""><?=$propiedad['direccion']?></p>
+                        <p><?=$propiedad['descripcion']?></p>
                         <!-- Meta -->
                         <div class="property-meta-data d-flex align-items-end">
                             <div class="new-tag">
                                 <?php
-                                if ($propiedad[0]['id_categoria'] == 1) {
+                                if ($propiedad['id_categoria'] == 1) {
                                     echo '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
-                                }elseif ($value['id_categoria'] == 2) {
+                                }elseif ($propiedad['id_categoria'] == 2) {
                                     echo '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
                                 }
                                 ?>
                                 <!-- <img src="<?=$base?>/img/icons/new.png" alt=""> -->
                             </div>
+                            <span><?=$propiedad['hab']?> dorm.</span>
                             <div class="bathroom">
                                 <img src="<?=$base?>/img/icons/bathtub.png" alt="">
-                                <span><?=$propiedad[0]['banos']?></span>
+                                <span><?=$propiedad['banos']?></span>
                             </div>
                             <div class="garage">
                                 <img src="<?=$base?>/img/icons/garage.png" alt="">
-                                <span><?=$propiedad[0]['par']?></span>
+                                <span><?=$propiedad['par']?></span>
                             </div>
                             <div class="space">
                                 <img src="<?=$base?>/img/icons/space.png" alt="">
-                                <span><?=$propiedad[0]['area']?> m²</span>
+                                <span><?=$propiedad['area']?> m²</span>
                             </div>
                         </div>
+                        <?php
+                            if ($propiedad['caracteristicas'] != ''){
+                                $caracteristicas = explode(',',$propiedad['caracteristicas']);
+                                echo('<ul class="listings-core-features d-flex align-items-center">');
+                                   foreach ($caracteristicas as $key => $value) {
+                                    echo<<<CARACTERISTICA
+                                    <li><i class="fa fa-check" aria-hidden="true"></i> {$value}</li>
+    CARACTERISTICA;
+                                }
+                                echo('</ul>');
+                            }
+                        ?>
                         <!-- Core Features -->
-                        <ul class="listings-core-features d-flex align-items-center">
+                        <!-- <ul class="listings-core-features d-flex align-items-center">
                             <li><i class="fa fa-check" aria-hidden="true"></i> Gated Community</li>
                             <li><i class="fa fa-check" aria-hidden="true"></i> Automatic Sprinklers</li>
                             <li><i class="fa fa-check" aria-hidden="true"></i> Fireplace</li>
@@ -86,7 +98,7 @@ $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad);
                             <li><i class="fa fa-check" aria-hidden="true"></i> Fireplace</li>
                             <li><i class="fa fa-check" aria-hidden="true"></i> Beach Access</li>
                             <li><i class="fa fa-check" aria-hidden="true"></i> Rooftop Terrace</li>
-                        </ul>
+                        </ul> -->
                         <!-- Listings Btn Groups -->
                         <!-- <div class="listings-btn-groups">
                             <a href="#" class="btn south-btn">See Floor plans</a>
@@ -98,13 +110,16 @@ $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad);
                     <div class="contact-realtor-wrapper">
                         <div class="realtor-info">
                             <img src="<?=$base?>/img/bg-img/listing.jpg" alt="">
+                            <?php
+                            $usuario = $this->cuenta_model->usuario_x_id($propiedad['usuario_id'])[0];
+                            ?>
                             <div class="realtor---info">
-                                <h2>Jeremy Scott</h2>
-                                <p>Realtor</p>
-                                <h6><img src="<?=$base?>/img/icons/phone-call.png" alt=""> +45 677 8993000 223</h6>
-                                <h6><img src="<?=$base?>/img/icons/envelope.png" alt=""> office@template.com</h6>
+                                <h2><?=$usuario['nombre']?> <?=$usuario['apellido']?></h2>
+                                <p>Agente de Bienes Raices</p>
+                                <h6><img src="<?=$base?>/img/icons/phone-call.png" alt=""><?=$usuario['telefono']?></h6>
+                                <h6><img src="<?=$base?>/img/icons/envelope.png" alt=""><?=$usuario['correo']?></h6>
                             </div>
-                            <div class="realtor--contact-form">
+                            <!-- <div class="realtor--contact-form">
                                 <form action="#" method="post">
                                     <div class="form-group">
                                         <input type="text" class="form-control" id="realtor-name" placeholder="Your Name">
@@ -120,19 +135,19 @@ $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad);
                                     </div>
                                     <button type="submit" class="btn south-btn">Send Message</button>
                                 </form>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Listing Maps -->
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-12">
                     <div class="listings-maps mt-100">
                         <div id="googleMap"></div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </section>
     <!-- ##### Listings Content Area End ##### -->
@@ -261,7 +276,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <!-- Active js -->
     <script src="<?=$base?>/js/active.js"></script>
     <!-- Google Maps -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwuyLRa1uKNtbgx6xAJVmWy-zADgegA2s"></script>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwuyLRa1uKNtbgx6xAJVmWy-zADgegA2s"></script> -->
     <script src="<?=$base?>/js/map-active.js"></script>
 
 </body>

@@ -2,9 +2,6 @@
 plantilla::aplicar();
 $base = base_url('base');
 
-if($_POST){
-    #Vainas
-}
 ?>
     <!-- ##### Hero Area Start ##### -->
     <section class="hero-area">
@@ -48,147 +45,13 @@ if($_POST){
         </div>
     </section>
     <!-- ##### Hero Area End ##### -->
-
-    <!-- ##### Advance Search Area Start ##### -->
-    <div class="south-search-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="advanced-search-form">
-                        <!-- Search Title -->
-                        <div class="search-title">
-                            <p>Busca tu hogar</p>
-                        </div>
-                        <!-- Search Form -->
-                        <form action="" method="post" id="advanceSearch">
-                            <div class="row">
-
-                                <div class="col-12 col-md-4 col-lg-3">
-                                    <div class="form-group">
-                                        <input type="input" class="form-control" name="busqueda" placeholder="Palabra clave">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-4 col-lg-3">
-                                    <div class="form-group">
-                                        <select class="form-control" id="cities">
-                                            <option>Todas las ciudades</option>
-                                            <?php
-                                            $propiedades = $this->propiedad_model->ciudades();
-                                            foreach ($propiedades as $key => $value) {
-                                                echo "<option value='{$value['ciudad']}'>{$value['ciudad']}</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-4 col-xl-2">
-                                    <div class="form-group">
-                                        <select class="form-control" id="bedrooms">
-                                            <option>Dormitorios</option>
-                                            <?php
-                                            $dormitorios = $this->propiedad_model->dormitorios();
-                                            foreach ($dormitorios as $key => $value) {
-                                                echo "<option value='{$value['hab']}'>{$value['hab']}</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-4 col-xl-2">
-                                    <div class="form-group">
-                                        <select class="form-control" id="bathrooms">
-                                            <option>Baños</option>
-                                            <?php
-                                            $banos = $this->propiedad_model->banos();
-                                            foreach ($banos as $key => $value) {
-                                                echo "<option value='{$value['banos']}'>{$value['banos']}</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-8 col-lg-12 col-xl-5 d-flex">
-                                    <!-- Area Range -->
-                                    <?php
-                                    $rango = $this->propiedad_model->rango_area();
-                                    ?>
-
-                                    <div class="slider-range">
-                                        <div data-min="<?=$rango[0]['min_area']?>" data-max="<?=$rango[0]['max_area']?>" data-unit=" m²" class="slider-range-area ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="<?=$rango[0]['min_area']?>" data-value-max="<?=$rango[0]['max_area']?>">
-                                            <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                                            <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
-                                            <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
-                                        </div>
-                                        <div class="range"><?=$rango[0]['min_area']?> m² - <?=$rango[0]['max_area']?> m²</div>
-                                    </div>
-
-                                    <!-- Area hidden input -->
-
-                                    <input type="hidden" name="min_area" id="min_area" value="<?=$rango[0]['min_area']?>">
-                                    <input type="hidden" name="max_area" id="max_area" value="<?=$rango[0]['max_area']?>">
-
-                                    <!-- Price Range -->
-                                    <?php
-                                    $rango = $this->propiedad_model->rango_precio();
-                                    ?>
-                                    <div class="slider-range">
-                                        <div data-min="<?=$rango[0]['min_precio']?>" data-max="<?=$rango[0]['max_precio']?>" data-unit=" USD" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="<?=$rango[0]['min_precio']?>" data-value-max="<?=$rango[0]['max_precio']?>">
-                                            <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                                            <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
-                                            <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
-                                        </div>
-                                        <div class="range"><?=$rango[0]['min_precio']?> USD - <?=$rango[0]['max_precio']?> USD</div>
-                                    </div>
-
-                                    <!-- Price hidden inputs -->
-
-                                    <input type="hidden" name="min_precio" id="min_precio" value="<?=$rango[0]['min_precio']?>">
-                                    <input type="hidden" name="max_precio" id="max_precio" value="<?=$rango[0]['max_precio']?>">
-
-                                </div>
-
-                                <div class="col-12 col-md-4 col-lg-3">
-                                            <div class="form-group">
-                                                <select class="form-control" id="types">
-                                                    <option>Todos los tipos</option>
-                                                    
-                                                    <?php
-                                                    $tipos = $this->propiedad_model->cont_tipos();
-                                                    foreach ($tipos as $key => $value) {
-                                                        $nombre = ucfirst($value['nombre']);
-                                                        echo<<<TIPOS
-                                                        <option value="{$value['id_categoria']}">{$nombre} <span>({$value['contador']})</span></option>
-TIPOS;}
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                            <div class="col-12 d-flex justify-content-between align-items-end">
-                                    <div class="form-group mb-0">
-                                        <button type="submit" class="btn south-btn">Buscar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ##### Advance Search Area End ##### -->
-
     <!-- ##### Featured Properties Area Start ##### -->
     <section class="featured-properties-area section-padding-100-50">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="section-heading wow fadeInUp">
-                        <h2>Últimas propiedades</h2>
+                        <h2>Propiedades Destacadas</h2>
                         <!-- <p>En esta seccion se muestran las propiedades mas exclusivas</p> -->
                     </div>
                 </div>
@@ -196,14 +59,14 @@ TIPOS;}
 
             <div class="row">
                 <?php
-                    $propiedades = $this->propiedad_model->ultPropiedades();
+                    $propiedades = $this->propiedad_model->propiedades_dest();
                     foreach ($propiedades as $key => $value) {
                         if ($value['id_categoria'] == 1) {
                             $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
                         }elseif ($value['id_categoria'] == 2) {
                             $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
                         }
-                        $link = base_url('propiedades/ver/1');
+                        $link = base_url('propiedades/ver/'.$value['id']);
                     echo<<<PROPIEDAD
                     <!-- Single Featured Property -->
                 <div class="col-12 col-md-6 col-xl-4">
@@ -227,7 +90,10 @@ TIPOS;}
                             <div class="property-meta-data d-flex align-items-end justify-content-between">
                                 <div class="new-tag">
                                     {$tipo}
+                                    
                                 </div>
+                                <span>{$value['hab']} dorm.</span>
+
                                 <div class="bathroom">
                                     <img src="{$base}/img/icons/bathtub.png" alt="">
                                     <span>{$value['banos']}</span>
@@ -501,7 +367,7 @@ PROPIEDAD;
                     <div class="cta-content text-center">
                         <h2 class="wow fadeInUp" data-wow-delay="300ms">Estas buscando una propiedad para rentar?</h2>
                         <h6 class="wow fadeInUp" data-wow-delay="400ms">Tambien tenemos la posibilidad de rentarte alguna de nuestras propiedades.</h6>
-                        <a href="#" class="btn south-btn mt-50 wow fadeInUp" data-wow-delay="500ms">Buscar</a>
+                        <a href="<?=base_url('propiedades')?>" class="btn south-btn mt-50 wow fadeInUp" data-wow-delay="500ms">Buscar</a>
                     </div>
                 </div>
             </div>
@@ -563,45 +429,6 @@ PROPIEDAD;
         </div>
     </section>
     <!-- ##### Testimonials Area End ##### -->
-
-    <!-- ##### Editor Area Start ##### -->
-    <section class="south-editor-area d-flex align-items-center">
-        <!-- Editor Content -->
-        <div class="editor-content-area">
-            <!-- Section Heading -->
-            <div class="section-heading wow fadeInUp" data-wow-delay="250ms">
-                <img src="<?=$base?>/img/icons/prize.png" alt="">
-                <h2>Rolando Valdez (RVO)</h2>
-                <p>El maldito final</p>
-            </div>
-            <p class="wow fadeInUp" data-wow-delay="500ms">a mi hay que darme mi banda y hablamos el martes.
-            a mi hay que darme mi banda y hablamos el martes.
-        a mi hay que darme mi banda y hablamos el martes.
-    a mi hay que darme mi banda y hablamos el martes.
-a mi hay que darme mi banda y hablamos el martes.
-a mi hay que darme mi banda y hablamos el martes.
-a mi hay que darme mi banda y hablamos el martes.
-a mi hay que darme mi banda y hablamos el martes.
-a mi hay que darme mi banda y hablamos el martes.
-a mi hay que darme mi banda y hablamos el martes.
-a mi hay que darme mi banda y hablamos el martes.
-</p>
-            <div class="address wow fadeInUp" data-wow-delay="750ms">
-                <h6><img src="<?=$base?>/img/icons/phone-call.png" alt=""> +1 809 555 5555</h6>
-                <h6><img src="<?=$base?>/img/icons/envelope.png" alt=""> enterprise@rvo.com</h6>
-            </div>
-            <div class="signature mt-50 wow fadeInUp" data-wow-delay="1000ms">
-                <img src="<?=$base?>/img/core-img/signature.png" alt="">
-            </div>
-        </div>
-
-        <!-- Editor Thumbnail -->
-        <div class="editor-thumbnail">
-            <img src="<?=$base?>/img/bg-img/rvo.jpg" alt="">
-        </div>
-    </section>
-    <!-- ##### Editor Area End ##### -->
-
     <!-- ##### Footer Area Start ##### -->
     <footer class="footer-area section-padding-100-0 bg-img gradient-background-overlay" style="background-image: url(<?=$base?>/img/bg-img/cta.jpg);">
         <!-- Main Footer Area -->

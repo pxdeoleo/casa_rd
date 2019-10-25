@@ -18,13 +18,13 @@ class Cuenta extends CI_Controller {
     }
 
     public function editar_usuario($id=0){
-        $this->load->model('Usuario_model');
+        $this->load->model('cuenta_model');
         $this->load->view('editar_usuario',['id'=>$id]);
     }
 
     function borrar_usuario($id=0){
-        $this->load->model('Usuario_model');
-        Usuario_model::borrar($id);
+        $this->load->model('cuenta_model');
+        cuenta_model::borrar($id);
         redirect('main');
     }
 
@@ -32,7 +32,7 @@ class Cuenta extends CI_Controller {
     {
         $this->load->model('cuenta_model');
         // cedula, correo, nombre, apellido, fecha de nacimiento y grupo ciclístico a que pertenece
-        $this->load->view('registro');
+        $this->load->view('add_usuario');
     }
 
     public function login()

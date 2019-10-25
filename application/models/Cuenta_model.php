@@ -8,17 +8,39 @@ class Cuenta_model extends CI_Model {
         parent::__construct();
     }
 
-    public function cuenta_x_id($id){
-        
+    static function guardar_usuario($usuario){
         $CI =& get_instance();
-    
+        
+        if (isset($usuario['id']) && $usuario['id'] >0) {
+            $CI->db->where('id', $usuario['id']);
+            $CI->db->update('usuarios', $usuario);
+        }else{
+            $CI->db->insert('usuarios', $usuario);
+        }
+    }
+
+    static function usuario_x_id($id){
+        $CI =& get_instance();
+        
         $usuario = $CI->db
-        ->where('id_usuario', $id)
+        ->where('id',$id)
         ->get('usuarios')
-        ->result();
-        
+        ->result_array();
+
         return $usuario;
+    }
+
+    static function listado_usuario(){
+        $CI =& get_instance();
         
+        $rs = $CI->db->get('usuarios')->result();
+        return $rs;
+    }
+
+    static function borrar($id){
+        $CI =& get_instance();
+        $sql = "delete from usuarios where id=?";
+        $CI->db->query($sql, [$id]);
     }
 
     static function guardar($usuario){ 
@@ -30,22 +52,6 @@ class Cuenta_model extends CI_Model {
             
         }else{ 
             $CI->db->insert('usuarios',$usuario);
-            
-        }
-    }
-
-    static function guardar_contacto($contacto){ 
-        $CI =& get_instance();
-
-        $fecha = ('Y-m-d'); //fecha
-        $contacto['fecha'] = $fecha;
-
-        if(isset($contacto['id_contacto']) && $contacto['id_contacto'] > 0){
-            $CI->db->where('id_contacto',$contacto['id_contacto']);
-            $CI->db->update('contacto',$contacto);
-            
-        }else{ 
-            $CI->db->insert('contacto',$contacto);
             
         }
     }
@@ -66,13 +72,6 @@ class Cuenta_model extends CI_Model {
         }
     }
     
-
-
-
-
-
-
-
 }
 
 /* End of file Noticias_model.php */
