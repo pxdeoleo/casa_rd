@@ -2,19 +2,7 @@
 plantilla::aplicar();
 $base = base_url('base');
 $isFilter = false;
-function PostFiltro(){
-    $filtro = new stdClass();
-    $filtro->keyword = $_POST['keyword'];
-    $filtro->ciudad = $_POST['ciudad'];
-    $filtro->hab =$_POST['hab'];
-    $filtro->banos = $_POST['banos'];
-    $filtro->minArea = $_POST['min_area'];
-    $filtro->maxArea = $_POST['max_area'];
-    $filtro->minPrecio= $_POST['min_precio'];
-    $filtro->maxPrecio= $_POST['max_precio'];   
-    $filtro->categoria = $_POST['categoria'];
-    return $filtro;
-}
+
 function getFiltro(){
     $filtro = new stdClass();
     $filtro->keyword = $_GET['keyword'];
@@ -29,20 +17,20 @@ function getFiltro(){
     return $filtro;
 }
 if($_POST){
-    $propiedades = $this->propiedad_model->filtrarPropiedades(getFiltroPost());
+
 }
 else{
     if((isset($_GET['keyword']) && $_GET['keyword']!= "") || 
     (isset($_GET['ciudad']) && 
-    $_GET['ciudad']!= "Todas las ciudades") || 
-    (isset($_GET['hab']) && $_GET['hab'] != "Dormitorios")  || 
-    (isset($_GET['banos'])  && $_GET['banos'] != "Baños")|| 
+    $_GET['ciudad']!= "*") || 
+    (isset($_GET['hab']) && $_GET['hab'] != "%")  || 
+    (isset($_GET['banos'])  && $_GET['banos'] != "%")|| 
     (isset($_GET['min_area']) && $_GET['min_area'] > 0)|| 
     (isset($_GET['max_area'])  && $_GET['max_area'] > 0)|| 
     (isset($_GET['min_precio']) && $_GET['min_precio'] > 0) || 
     (isset($_GET['max_precio']) && $_GET['max_precio']>0)|| 
     (isset($_GET['categoria']) && 
-     $_GET['categoria'] != "Todos los tipos")){
+     $_GET['categoria'] != "%")){
         $isFilter = true;
     }else{
         $isFilter = false;
@@ -87,7 +75,7 @@ else{
                                 <div class="col-12 col-md-4 col-lg-3">
                                     <div class="form-group">
                                         <select class="form-control" id="ciudad" name="ciudad">
-                                            <option value = "*">Todas las ciudades</option>
+                                            <option value = "%">Todas las ciudades</option>
                                             <?php
                                             $propiedades = $this->propiedad_model->ciudades();
                                             foreach ($propiedades as $key => $value) {
@@ -101,7 +89,7 @@ else{
                                 <div class="col-12 col-md-4 col-xl-2">
                                     <div class="form-group">
                                         <select class="form-control" id="hab" name="hab">
-                                            <option  value = "*">Dormitorios</option>
+                                            <option  value = "%">Dormitorios</option>
                                             <?php
                                             $dormitorios = $this->propiedad_model->dormitorios();
                                             foreach ($dormitorios as $key => $value) {
@@ -115,7 +103,7 @@ else{
                                 <div class="col-12 col-md-4 col-xl-2">
                                     <div class="form-group">
                                         <select class="form-control" id="banos" name="banos">
-                                            <option  value = "*">Baños</option>
+                                            <option  value = "%">Baños</option>
                                             <?php
                                             $banos = $this->propiedad_model->banos();
                                             foreach ($banos as $key => $value) {
@@ -169,7 +157,7 @@ else{
                                 <div class="col-12 col-md-4 col-lg-3">
                                             <div class="form-group">
                                                 <select class="form-control" id="categoria" name="categoria">
-                                                    <option  value = "*">Todos los tipos</option>
+                                                    <option  value = "%">Todos los tipos</option>
                                                     <?php
                                                     $tipos = $this->propiedad_model->cont_tipos();
                                                     foreach ($tipos as $key => $value) {

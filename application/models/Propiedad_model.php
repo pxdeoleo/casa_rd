@@ -154,20 +154,15 @@ class Propiedad_model extends CI_Model {
     }
     public function filtrarPropiedades($filtro){
         $CI =& get_instance();
-        $areas = ('area between '.$filtro->minArea.' and '.$filtro->maxArea);
-        $precios = ('precio between '.$filtro->minPrecio.' and '.$filtro->maxPrecio);
+        $sql = "ciudad like '".$filtro->ciudad."' and hab like '".$filtro->hab."' and banos like '".
+        $filtro->banos."' and id_categoria like '".$filtro->categoria."' and (nombre like '%".$filtro->keyword.
+        "%' or descripcion like '%".$filtro->keyword."%' or sector like '%".$filtro->keyword."%'
+        or provincia like '%".$filtro->keyword."%') and area between '".$filtro->minArea."' and
+        '".$filtro->maxArea."' and precio between '".$filtro->minPrecio."' and '".$filtro->maxPrecio."'";
         $propiedades = $CI->db
-        ->distinct()
-        ->order_by('fecha','DESC')
-        ->where('ciudad =', $filtro->ciudad)
-        ->where('hab =', $filtro->hab)
-        ->or_where('banos =', $filtro->banos)
-        // ->or_where($areas)
-        // ->or_where($precios)
-        ->or_where('id_categoria =', $filtro->categoria)
+        ->where($sql)
         ->get('propiedades')
         ->result_array();
-
         return $propiedades;
     }
 
