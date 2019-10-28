@@ -8,6 +8,17 @@ class Propiedad_model extends CI_Model {
         parent::__construct();
     }
 
+    static function guardar_propiedad($propiedad){
+        $CI =& get_instance();
+        
+        if (isset($propiedad['id']) && $propiedad['id'] > 0) {
+            $CI->db->where('id', $propiedad['id']);
+            $CI->db->update('propiedades', $propiedad);
+        }else{
+            $CI->db->insert('propiedades', $propiedad);
+        }
+    }
+
     public function propiedades(){
         $CI =& get_instance();
 

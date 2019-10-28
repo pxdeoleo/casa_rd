@@ -70,7 +70,7 @@ LOGIN;
                 <nav class="classy-navbar justify-content-between" id="southNav">
 
                     <!-- Logo -->
-                    <a class="nav-brand" href="<?=base_url("")?>">CasasRD <!-- <img src="<?=$base?>/img/core-img/logo.png" alt="">  --> </a>
+                    <a class="nav-brand" href="<?=base_url("")?>"><img src="<?=$base?>/img/core-img/logo.png" alt="">  </a>
 
                     <!-- Navbar Toggler -->
                     <div class="classy-navbar-toggler">

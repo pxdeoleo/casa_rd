@@ -1,9 +1,10 @@
 <?php
+session_start();
 if ($_POST) {
-    $propiedad = $_POST;
+	$propiedad = $_POST;
+	$propiedad['usuario_id'] = $_SESSION['id_usuario'];
     Propiedad_model::guardar_propiedad($propiedad);
-
-    redirect('main/propiedad');
+    redirect('propiedades');
 }
 $base = base_url('base');
 ?>
@@ -39,176 +40,96 @@ $base = base_url('base');
 <!--===============================================================================================-->
 </head>
 <body>
-
-
 	<div class="container-contact100">
 		<div class="wrap-contact100">
-			<form class="contact100-form validate-form">
+			<form method="post" class="contact100-form validate-form">
 				<span class="contact100-form-title">
 					Agregar Propiedad
 				</span>
 
 				<div class="wrap-input100 validate-input bg1" data-validate="Porfavor no dejar el campo vacío">
 					<span class="label-input100">Nombre completo *</span>
-					<input class="input100" type="text" name="name" placeholder="Introducir Nombre">
+					<input class="input100" type="text" name="nombre" placeholder="Introducir Nombre">
 				</div>
 
-				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate = "Porfavor no dejar el campo vacío (e@a.x)">
-					<span class="label-input100">Email *</span>
-					<input class="input100" type="text" name="email" placeholder="Introducir Email ">
-				</div>
-
-				<div class="wrap-input100 bg1 rs1-wrap-input100">
-					<span class="label-input100">Telefono</span>
-					<input class="input100" type="text" name="phone" placeholder="Introducir Telefono">
-				</div>
-
-				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate = "Porfavor no dejar el campo vacío (e@a.x)">
+				<div class="wrap-input100 validate-input bg1" data-validate = "Porfavor no dejar el campo vacío (e@a.x)">
 					<span class="label-input100">Dirección</span>
-					<input class="input100" type="text" name="email" placeholder="Introducir Dirección ">
+					<input class="input100" type="text" name="direccion" placeholder="Introducir Dirección ">
+				</div>
+
+				<div class="wrap-input100 bg1">
+					<span class="label-input100">Sector</span>
+					<input class="input100" type="text" name="sector" placeholder="Introducir Sector">
+					<datalist id="sectores">
+						<?php
+							$ciudades = $this->propiedad_model->ciudades();
+
+							foreach ($ciudades as $key => $value) {
+								echo('<option>'.$value['ciudad'].'</option>');
+							}
+						?>
+					</datalist>
 				</div>
 
 				<div class="wrap-input100 bg1 rs1-wrap-input100">
-					<span class="label-input100">Sector</span>
-					<input class="input100" type="text" name="phone" placeholder="Introducir Sector">
-				</div>
-
-				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
 					<span class="label-input100">Ciudad</span>
-					<div>
-						<select class="js-select2" name="service">
-							<option>Seleccionar Ciudad</option>
-							<option>Opción 1</option>
-							<option>Opción 2</option>
-							<option>Opción 3</option>
-						</select>
-						<div class="dropDownSelect2"></div>
-					</div>
-				</div>
+					<input class="input100" type="text" list="ciudades" name="ciudad" placeholder="Introducir Ciudad">
+					<datalist id="ciudades">
+						<?php
+							$ciudades = $this->propiedad_model->ciudades();
 
-				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
-					<span class="label-input100">Provincia</span>
-					<div>
-						<select class="js-select2" name="service">
-							<option>Seleccionar Provincia</option>
-							<option>Opción 1</option>
-							<option>Opción 2</option>
-							<option>Opción 3</option>
-						</select>
-						<div class="dropDownSelect2"></div>
-					</div>
+							foreach ($ciudades as $key => $value) {
+								echo('<option>'.$value['ciudad'].'</option>');
+							}
+						?>
+					</datalist>
 				</div>
 
 				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
 					<span class="label-input100">Categoria</span>
 					<div>
-						<select class="js-select2" name="service">
+						<select class="js-select2" name="id_categoria">
 							<option>Seleccionar Categoria</option>
-							<option>Opción 1</option>
-							<option>Opción 2</option>
-							<option>Opción 3</option>
+							<?php
+								$categorias = $this->categoria_model->get_categorias();
+								foreach ($categorias as $key => $value) {
+									echo('<option value="'.$value['id'].'">'.ucfirst($value['nombre']).'</option>');
+								}
+							?>
 						</select>
 						<div class="dropDownSelect2"></div>
 					</div>
 				</div>
-
-				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
+				
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
 					<span class="label-input100">Parqueos</span>
-					<div>
-						<select class="js-select2" name="service">
-							<option>Seleccionar Parqueos</option>
-							<option>Opción 1</option>
-							<option>Opción 2</option>
-							<option>Opción 3</option>
-						</select>
-						<div class="dropDownSelect2"></div>
-					</div>
+					<input class="input100" type="number" name="par" min="0">
 				</div>
 
-				<div class="wrap-input100 validate-input bg1">
-					<span class="label-input100">Area</span>
-					<input class="input100" type="text" name="phone" placeholder="Introducir Area en m²">
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
+					<span class="label-input100">Area en m²</span>
+					<input class="input100" type="number" name="area" placeholder="Introducir Area en m²" min="0">
 				</div>
 
 
-				<div class="wrap-input100 input100-select bg1">
-					<span class="label-input100">Baños *</span>
-					<div>
-						<select class="js-select2" name="service">
-							<option>Seleccionar cantidad de baños</option>
-							<option>Opción 1</option>
-							<option>Opción 2</option>
-							<option>Opción 3</option>
-						</select>
-						<div class="dropDownSelect2"></div>
-					</div>
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
+					<span class="label-input100">Baños*</span>
+					<input class="input100" type="number" name="banos" required min="0">
 				</div>
 
-				<div class="wrap-contact100-form-range">
-						<span class="label-input100">Precio *</span>
-
-						<div class="contact100-form-range-value">
-							$<span id="value-lower">610</span> - $<span id="value-upper">980</span>
-							<input type="text" name="from-value">
-							<input type="text" name="to-value">
-						</div>
-
-						<div class="contact100-form-range-bar">
-							<div id="filter-bar"></div>
-						</div>
-					</div>
-
-					<div class="wrap-input100 validate-input bg1">
-					<span class="label-input100">Imagenes de la propiedad</span>
-					<input class="input100" type="file" name="img">
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
+					<span class="label-input100">Precio*</span>
+					<input class="input100" type="number" name="precio" required min="0">
 				</div>
-
-	<!--			<div class="w-full dis-none js-show-service">
-					<div class="wrap-contact100-form-radio">
-						<span class="label-input100">What type of products do you sell?</span>
-
-						<div class="contact100-form-radio m-t-15">
-							<input class="input-radio100" id="radio1" type="radio" name="type-product" value="physical" checked="checked">
-							<label class="label-radio100" for="radio1">
-								Phycical Products
-							</label>
-						</div>
-
-						<div class="contact100-form-radio">
-							<input class="input-radio100" id="radio2" type="radio" name="type-product" value="digital">
-							<label class="label-radio100" for="radio2">
-								Digital Products
-							</label>
-						</div>
-
-						<div class="contact100-form-radio">
-							<input class="input-radio100" id="radio3" type="radio" name="type-product" value="service">
-							<label class="label-radio100" for="radio3">
-								Services Consulting
-							</label>
-						</div>
-					</div>
-
-					<div class="wrap-contact100-form-range">
-						<span class="label-input100">Budget *</span>
-
-						<div class="contact100-form-range-value">
-							$<span id="value-lower">610</span> - $<span id="value-upper">980</span>
-							<input type="text" name="from-value">
-							<input type="text" name="to-value">
-						</div>
-
-						<div class="contact100-form-range-bar">
-							<div id="filter-bar"></div>
-						</div>
-					</div>
-				</div>
-
-			-->
 
 				<div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Type Your Message">
 					<span class="label-input100">Descripción</span>
-					<textarea class="input100" name="message" placeholder="Introducir Descripción de la propiedad aqui..."></textarea>
+					<textarea class="input100" name="descripcion" placeholder="Introducir Descripción de la propiedad aqui..."></textarea>
+				</div>
+
+				<div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Type Your Message">
+					<span class="label-input100">Características</span>
+					<textarea class="input100" name="caracteristicas" placeholder="Caracterisitca 1, Caracterisitca 2, Caracterisitca 3 "></textarea>
 				</div>
 
 				<div class="container-contact100-form-btn">
@@ -216,6 +137,14 @@ $base = base_url('base');
 						<span>
 							Enviar
 							<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+						</span>
+					</button>
+				</div>
+				<div class="container-contact100-form-btn">
+					<button class="contact100-form-btn">
+						<span>
+							Volver
+							<i class=" m-l-7" aria-hidden="true"></i>
 						</span>
 					</button>
 				</div>

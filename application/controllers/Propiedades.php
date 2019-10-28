@@ -7,7 +7,6 @@ class Propiedades extends CI_Controller {
     public function index()
     {
         $this->load->model('propiedad_model');
-
         $this->load->view('propiedades');
     }
 
@@ -19,6 +18,7 @@ class Propiedades extends CI_Controller {
 
     public function agregar()
     {
+        $this->load->model('categoria_model');
         $this->load->model('propiedad_model');
         $this->load->view('agregar_propiedad');
     }
