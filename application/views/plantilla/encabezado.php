@@ -1,7 +1,7 @@
 <?php
 session_start();
 $base = base_url('base');
-// $galerias = base_url('galerias');
+
 ?>
 
 <head>
