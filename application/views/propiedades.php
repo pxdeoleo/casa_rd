@@ -248,6 +248,7 @@ TIPOS;}
 
             </div>
 
+
             <!-- <div class="row">
                 <div class="col-12">
                     <div class="south-pagination d-flex justify-content-end">
@@ -366,6 +367,8 @@ TIPOS;}
                 </div>
             </div>
         </div>
+
+<!-- Script para recuperar Parametros Modal Empleado -->
 
         <!-- Copywrite Text -->
         <div class="copywrite-text d-flex align-items-center justify-content-center">

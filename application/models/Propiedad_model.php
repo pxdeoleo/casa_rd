@@ -176,8 +176,24 @@ class Propiedad_model extends CI_Model {
         ->result_array();
         return $propiedades;
     }
-
-    function showCard($value,$tipo){
+    public function sendMail($mailcontent){
+    $headers = 'From: Casas RD casarepdom@gmail.com' . "\r\n" .
+    'Reply-To: '. $mailcontent->reply . "\r\n" .
+    'X-Mailer: PHP/' . phpversion() . "\r\n" . 
+    'Content-type: text/html; charset=iso-8859-1';
+    $title =  'Nuevo Mensaje Acerca de '.$mailcontent->propiedad;
+    $body = '<html><head> <title>Nuevo Mensaje Acerca de '.$mailcontent->propiedad.'</title>
+    </head>
+    <body>
+      <p style="font-size: 18px; color:black;">Tienes un nuevo mensaje acerca de tu anuncio <strong>'.
+      $mailcontent->propiedad.'</strong> con el tema de <strong>'.$mailcontent->subject.' </strong>
+      de parte de <strong>'.$mailcontent->nombre.'</strong> que dice lo siguiente:</p>
+      <p style="font-size: 16px;  color:black;">'.$mailcontent->mensaje.'</p>
+    </body>
+    </html>';
+    mail($mailcontent->recipient,$title,$body,$headers);
+    }
+    public function showCard($value,$tipo){
         $base = base_url('base');
         if ($value['id_categoria'] == 1) {
             $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
@@ -185,7 +201,6 @@ class Propiedad_model extends CI_Model {
             $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
         }
         $link = base_url('propiedades/ver/'.$value['id']);
-        
 echo<<<PROPIEDAD
                     <!-- Single Featured Property -->
                 <div class="col-12 col-md-6 col-xl-4">
