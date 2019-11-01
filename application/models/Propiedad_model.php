@@ -223,6 +223,23 @@ class Propiedad_model extends CI_Model {
         return $propiedades;
     }
 
+    public function sendMail($mailcontent){
+    $headers = 'From: Casas RD casarepdom@gmail.com' . "\r\n" .
+    'Reply-To: '. $mailcontent->reply . "\r\n" .
+    'X-Mailer: PHP/' . phpversion() . "\r\n" . 
+    'Content-type: text/html; charset=iso-8859-1';
+    $title =  'Nuevo Mensaje Acerca de '.$mailcontent->propiedad;
+    $body = '<html><head> <title>Nuevo Mensaje Acerca de '.$mailcontent->propiedad.'</title>
+    </head>
+    <body>
+      <p style="font-size: 18px; color:black;">Tienes un nuevo mensaje acerca de tu anuncio <strong>'.
+      $mailcontent->propiedad.'</strong> con el tema de <strong>'.$mailcontent->subject.' </strong>
+      de parte de <strong>'.$mailcontent->nombre.'</strong> que dice lo siguiente:</p>
+      <p style="font-size: 16px;  color:black;">'.$mailcontent->mensaje.'</p>
+    </body>
+    </html>';
+    mail($mailcontent->recipient,$title,$body,$headers);
+    }
     public function showCard($value,$tipo){
         $base = base_url('base');
         $img = $this->propiedad_model->imagen_x_id($value['id']);
