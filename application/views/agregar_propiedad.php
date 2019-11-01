@@ -6,6 +6,11 @@ ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
 if ($_POST) {
 	$propiedad = $_POST;
+
+	if($_POST['moneda'] == 'RD$'){
+		$_POST['precio'] = $_POST['precio'] * convertir_divisa($_POST['moneda']);
+	}
+
 	$propiedad['usuario_id'] = $_SESSION['id_usuario'];
     Propiedad_model::guardar_propiedad($propiedad);
     redirect('propiedades');
@@ -115,25 +120,30 @@ $base = base_url('base');
 					<input class="input100" type="number" name="area" placeholder="Introducir Area en m²" min="0" required>
 				</div>
 
-
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
+					<span class="label-input100">Habitaciones*</span>
+					<input class="input100" type="number" name="hab" required min="0">
+				</div>
+				
 				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
 					<span class="label-input100">Baños*</span>
 					<input class="input100" type="number" name="banos" required min="0">
 				</div>
-
-				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
-					<div class="row">
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">	
 					<span class="label-input100">Precio*</span>
-
-						<div class="clear-select">
-							<select style="background: #f7f7f7; height: 20px; border:0px; outline:0px; font-size:13px;" name="moneda">
-								<option selected disabled style="font-size:12px;">Moneda</option>
-								<option value="RD$" style="font-size:12px;">RD$</option>
-								<option value="USD"style="font-size:12px;">USD</option>
-							</select>
-						</div>
-					</div>
 					<input class="input100" type="number" name="precio" required min="0">
+				</div>
+
+				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
+					<span class="label-input100">Moneda</span>
+					<div>
+						<select class="js-select2" name="id_categoria" required>
+							<option disabled style="font-size:12px;">Moneda</option>
+							<option selected value="RD$" style="font-size:12px;">RD$</option>
+							<option value="USD"style="font-size:12px;">USD</option>
+						</select>
+						<div class="dropDownSelect2"></div>
+					</div>
 				</div>
 
 				<div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Type Your Message">

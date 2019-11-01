@@ -236,12 +236,12 @@ TIPOS;}
                 $propiedades = $this->propiedad_model->ultPropiedades();
                 foreach ($propiedades as $key => $value) {
                     $base = base_url('base');
-                    if ($value['id_categoria'] == 1) {
+                    if ($value['id_categoria'] =! 2) {
                         $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
-                    }elseif ($value['id_categoria'] == 2) {
+                    }else {
                         $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
                     }
-                    $this->propiedad_model->showCard($value,$tipo);
+                    $this->propiedad_model->showCard($value, $tipo);
                 }
             }
                 ?>
