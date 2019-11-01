@@ -53,6 +53,12 @@ $base = base_url('base');
 	<link rel="stylesheet" type="text/css" href="<?=$base?>/css/util.css">
 	<link rel="stylesheet" type="text/css" href="<?=$base?>/css/main.css">
 <!--===============================================================================================-->
+		<script>
+			function setCategoria(){
+				$("div.select-moneda select").val("<?=$propiedad['moneda']?>")
+			}
+			window.onload = setCategoria;
+		</script>
 </head>
 <body>
 	<div class="container-contact100">
@@ -61,7 +67,9 @@ $base = base_url('base');
 				<span class="contact100-form-title">
 					Editar Propiedad
 				</span>
-				<input type="hidden" name="id" value='<?=$propiedad['id']?>' class="form-control" placeholder="Nombre..." aria-describedby="inputGroupPrepend2" required>
+				<input type="hidden" name="id" value='<?=$propiedad['id']?>' required>
+				<input type="hidden" id="moneda" name="moneda" value='<?=$propiedad['moneda']?>' required>
+
 				<div class="wrap-input100 validate-input bg1" data-validate="Porfavor no dejar el campo vacío">
 					<span class="label-input100">Nombre del anuncio*</span>
 					<input class="input100"type="text" value='<?= $propiedad['nombre']?>' name="nombre" placeholder="Introducir Nombre" required>
@@ -103,12 +111,17 @@ $base = base_url('base');
 				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
 					<span class="label-input100">Categoria</span>
 					<div>
-						<select class="js-select2" name="id_categoria" required>
+						<select class="js-select2" required>
 							<option selected disabled>Seleccionar Categoria</option>
 							<?php
 								$categorias = $this->categoria_model->get_categorias();
 								foreach ($categorias as $key => $value) {
-									echo('<option value="'.$value['id'].'">'.ucfirst($value['nombre']).'</option>');
+									if ($propiedad['id_categoria'] == $value['id']){
+										$selected = " selected ";
+									}else{
+										$selected = "";
+									}
+									echo('<option value="'.$value['id'].'" ' . $selected .'>'.ucfirst($value['nombre']).'</option>');
 								}
 							?>
 						</select>
@@ -139,14 +152,15 @@ $base = base_url('base');
 					<span class="label-input100">Precio*</span>
 					<input class="input100" type="number" value='<?= $propiedad['precio']?>'  name="precio" required min="0">
 				</div>
+				
 
 				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
-					<span class="label-input100">Moneda</span>
-					<div>
-						<select class="js-select2" name="id_categoria" required>
+					<span id="selected-moneda" class="label-input100">Moneda</span>
+					<div class="select-moneda">
+						<select id="select-moneda" class="js-select2" onchange="getMoneda()" name="id_categoria" required>
 							<option disabled style="font-size:12px;">Moneda</option>
-							<option selected value="RD$" style="font-size:12px;">RD$</option>
-							<option value="USD"style="font-size:12px;">USD</option>
+							<option value="RD$" style="font-size:12px;" <?php if($propiedad['moneda']=="RD$"){echo("selected");} ?> >RD$</option>
+							<option value="USD"style="font-size:12px;" <?php if($propiedad['moneda']=="USD"){echo("selected");} ?>>USD</option>
 						</select>
 						<div class="dropDownSelect2"></div>
 					</div>
@@ -187,6 +201,14 @@ $base = base_url('base');
 	<script src="<?=$base?>/vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
 	<script src="<?=$base?>/vendor/select2/select2.min.js"></script>
+
+	<script>
+		function getMoneda(){
+			var moneda = $("#select-moneda").val();
+			document.getElementById("moneda").value = moneda;
+		}
+
+	</script>
 	<script>
 		$(".js-select2").each(function(){
 			$(this).select2({

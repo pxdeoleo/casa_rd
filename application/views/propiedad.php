@@ -60,7 +60,6 @@ if($_POST){
                         </div>
                         <h5><?=$propiedad['nombre']?></h5>
                         <p class="location"><img src="<?=$base?>/img/icons/location.png" alt=""><?=$propiedad['direccion']?></p>
-                        <p><?=$propiedad['descripcion']?></p>
                         <!-- Meta -->
                         <div class="property-meta-data d-flex align-items-end">
                             <div class="new-tag">
@@ -87,9 +86,29 @@ if($_POST){
                                 <span><?=$propiedad['area']?> m²</span>
                             </div>
                         </div>
+                        <br>
+                        <hr>
+                        <p>
+                        <?php
+                            $descripcion = explode(PHP_EOL,$propiedad['descripcion']);
+                            echo('<ul>');
+                            foreach ($descripcion as $key => $value) {
+                                if($value != ""){
+                                    echo<<<CARACTERISTICA
+                                    <li>{$value}</li>
+CARACTERISTICA;
+                            echo("</ul>");
+                                }else{
+                                    echo("<br>");
+                                }
+                                
+                        }
+                        $descripcion?></p>
                         <?php
                             if ($propiedad['caracteristicas'] != ''){
-                                $caracteristicas = explode(',',$propiedad['caracteristicas']);
+                                $caracteristicas = explode(PHP_EOL,$propiedad['caracteristicas']);
+                                echo("<h2>Caracteristicas</h2>");
+
                                 echo('<ul class="listings-core-features d-flex align-items-center">');
                                    foreach ($caracteristicas as $key => $value) {
                                     echo<<<CARACTERISTICA
@@ -99,6 +118,8 @@ if($_POST){
                                 echo('</ul>');
                             }
                         ?>
+                        <div id="map" style="width: 700px; height: 500px"></div>
+
                         <!-- Core Features -->
                         <!-- <ul class="listings-core-features d-flex align-items-center">
                             <li><i class="fa fa-check" aria-hidden="true"></i> Gated Community</li>
@@ -396,6 +417,26 @@ $('#MContactForm').on('show.bs.modal', function (event) {
   function enviarMensaje(){
   }
   </script>
+    <script>
+    function main(){
+        var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom: 18, minZoom: 7, attribution: 'FranWilbRol'});
+
+        var map = L.map('map').setView([18.91668, -70.59814], 8).addLayer(osm);
+
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
+
+        L.marker([<?= $propiedad['latitud'] ?>, <?= $propiedad['longitud'] ?>]).addTo(map);
+
+    }
+    window.onload = main;
+
+</script>
+
 </body>
 
 </html>

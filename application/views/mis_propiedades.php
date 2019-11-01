@@ -73,13 +73,14 @@ $propiedades = $this->propiedad_model->propiedades_x_usuario($id_usuario);
                     $url_editar = base_url('propiedades/editar/'.$value['id']);
                     $precio = number_format($value['precio'], 2);
                     $url_ver = base_url('propiedades/ver/'.$value['id']);
+                    $moneda = $value['moneda'];
                     echo<<<PROPIEDAD
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="single-features-area mb-50">
                             <a href="{$url_ver}"><img style="height:200px; width: 400; object-fit:cover; overflow:hidden;" src="{$imagen}" alt=""></a>
                             <!-- Price -->
                             <div class="price-start">
-                                <p>RD$ $precio</p>
+                                <p>{$moneda} {$precio}</p>
                             </div>
                             <div class="feature-content d-flex align-items-center justify-content-between">
                                 <div class="feature-title">

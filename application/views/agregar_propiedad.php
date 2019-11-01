@@ -22,6 +22,8 @@ $base = base_url('base');
 <head>
 	<title>Registrar Propiedad</title>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+  	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script> 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
 	<link rel="icon" type="image/png" href="<?=$base?>/images/icons/favicon.ico"/>
@@ -139,8 +141,8 @@ $base = base_url('base');
 					<div>
 						<select class="js-select2" name="id_categoria" required>
 							<option disabled style="font-size:12px;">Moneda</option>
-							<option selected value="RD$" style="font-size:12px;">RD$</option>
-							<option value="USD"style="font-size:12px;">USD</option>
+							<option value="RD$" style="font-size:12px;">RD$</option>
+							<option value="USD"style="font-size:12px;" selected>USD</option>
 						</select>
 						<div class="dropDownSelect2"></div>
 					</div>
@@ -150,11 +152,18 @@ $base = base_url('base');
 					<span class="label-input100">Descripción</span>
 					<textarea class="input100" name="descripcion" placeholder="Introducir Descripción de la propiedad aqui..."></textarea>
 				</div>
-
 				<div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Type Your Message">
 					<span class="label-input100">Características</span>
 					<textarea class="input100" name="caracteristicas" placeholder="Caracterisitca 1, Caracterisitca 2, Caracterisitca 3 "></textarea>
 				</div>
+				<div class="wrap-input100 bg1">
+					<label>Localizacion: </label>
+					<div style="height: 470px; " id="map"></div>
+						<input hidden id="lugar" type="text" class="form-control"  required >
+						<input hidden id="latitud" type="text" class="form-control" name="latitud" required >
+						<input hidden id="longitud" type="text" class="form-control" name="longitud" required >
+					</div>
+				<div>
 				<div class="wrap-input100 validate-input bg1">
 					<span class="label-input100">Imagenes de la propiedad</span>
 					<input class="input100" type="file" name="foto[]" multiple required>
@@ -237,7 +246,7 @@ $base = base_url('base');
 	    });
 	</script>
 <!--===============================================================================================-->
-	<script src="<?=$base?>/js/main.js"></script>
+<script src="<?=$base?>/js/main.js"></script>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
@@ -248,6 +257,35 @@ $base = base_url('base');
 
   gtag('config', 'UA-23581568-13');
 </script>
+<script>
+  var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom: 18, minZoom: 7, attribution: 'FranWilbRol'});
 
+  var map = L.map('map').setView([18.91668, -70.59814], 8).addLayer(osm);
+
+  var marker;
+  var $locali;
+  map.on('click', function (e) {
+      if (! marker) {
+          marker = L.marker([0, 0]);
+          marker.bindPopup("");
+          marker.addTo(map);
+      }
+      marker.setLatLng(e.latlng);
+      marker.setPopupContent("GPS coordinates: " + e.latlng.lat + ", " + e.latlng.lng + "<br />Searching for the address...");
+      marker.update();
+      marker.openPopup();
+      map.panTo(e.latlng);
+      $.getJSON("http://nominatim.openstreetmap.org/reverse?format=json&addressdetails=0&zoom=18&lat=" + e.latlng.lat + "&lon=" + e.latlng.lng + "&json_callback=?",
+          function (response) {
+              marker.setPopupContent(response.display_name);
+              marker.update();
+              $('#lugar').val(response.display_name);
+              $('#latitud').val(response.lat);
+              $('#longitud').val(response.lon);
+          }
+      );
+  });
+</script>
 </body>
 </html>
+

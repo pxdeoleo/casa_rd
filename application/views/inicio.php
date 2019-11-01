@@ -72,6 +72,8 @@ $base = base_url('base');
                         $link = base_url('propiedades/ver/'.$value['id']);
                         $precio = number_format($value['precio'], 2);
                         $moneda = $value['moneda'];
+                        $descripcion = substr($value['descripcion'], 0, 100);
+
                     echo<<<PROPIEDAD
                     <!-- Single Featured Property -->
                 <div class="col-12 col-md-6 col-xl-4">
@@ -90,7 +92,7 @@ $base = base_url('base');
                         <div class="property-content">
                             <h5>{$value['nombre']}</h5>
                             <p class="location"><img src="{$base}/img/icons/location.png" alt="">{$value['direccion']}</p>
-                            <p>{$value['descripcion']}</p>
+                            <p>{$descripcion}</p>
                             <div class="property-meta-data d-flex align-items-end justify-content-between">
                                 <div class="new-tag">
                                     {$tipo}

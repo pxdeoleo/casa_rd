@@ -213,8 +213,7 @@ class Propiedad_model extends CI_Model {
         $CI =& get_instance();
         $sql = "ciudad like '".$filtro->ciudad."' and hab like '".$filtro->hab."' and banos like '".
         $filtro->banos."' and id_categoria like '".$filtro->categoria."' and (nombre like '%".$filtro->keyword.
-        "%' or descripcion like '%".$filtro->keyword."%' or sector like '%".$filtro->keyword."%'
-        or provincia like '%".$filtro->keyword."%') and area between '".$filtro->minArea."' and
+        "%' or descripcion like '%".$filtro->keyword."%' or sector like '%".$filtro->keyword."%') and area between '".$filtro->minArea."' and
         '".$filtro->maxArea."' and precio between '".$filtro->minPrecio."' and '".$filtro->maxPrecio."'";
         $propiedades = $CI->db
         ->where($sql)
@@ -224,33 +223,34 @@ class Propiedad_model extends CI_Model {
     }
 
     public function sendMail($mailcontent){
-    $headers = 'From: Casas RD casarepdom@gmail.com' . "\r\n" .
-    'Reply-To: '. $mailcontent->reply . "\r\n" .
-    'X-Mailer: PHP/' . phpversion() . "\r\n" . 
-    'Content-type: text/html; charset=iso-8859-1';
-    $title =  'Nuevo Mensaje Acerca de '.$mailcontent->propiedad;
-    $body = '<html><head> <title>Nuevo Mensaje Acerca de '.$mailcontent->propiedad.'</title>
-    </head>
-    <body>
-      <p style="font-size: 18px; color:black;">Tienes un nuevo mensaje acerca de tu anuncio <strong>'.
-      $mailcontent->propiedad.'</strong> con el tema de <strong>'.$mailcontent->subject.' </strong>
-      de parte de <strong>'.$mailcontent->nombre.'</strong> que dice lo siguiente:</p>
-      <p style="font-size: 16px;  color:black;">'.$mailcontent->mensaje.'</p>
-    </body>
-    </html>';
-    mail($mailcontent->recipient,$title,$body,$headers);
+        $headers = 'From: Casas RD casarepdom@gmail.com' . "\r\n" .
+        'Reply-To: '. $mailcontent->reply . "\r\n" .
+        'X-Mailer: PHP/' . phpversion() . "\r\n" . 
+        'Content-type: text/html; charset=iso-8859-1';
+        $title =  'Nuevo Mensaje Acerca de '.$mailcontent->propiedad;
+        $body = '<html><head> <title>Nuevo Mensaje Acerca de '.$mailcontent->propiedad.'</title>
+        </head>
+        <body>
+        <p style="font-size: 18px; color:black;">Tienes un nuevo mensaje acerca de tu anuncio <strong>'.
+        $mailcontent->propiedad.'</strong> con el tema de <strong>'.$mailcontent->subject.' </strong>
+        de parte de <strong>'.$mailcontent->nombre.'</strong> que dice lo siguiente:</p>
+        <p style="font-size: 16px;  color:black;">'.$mailcontent->mensaje.'</p>
+        </body>
+        </html>';
+        mail($mailcontent->recipient,$title,$body,$headers);
     }
     public function showCard($value,$tipo){
         $base = base_url('base');
         $img = $this->propiedad_model->imagen_x_id($value['id']);
         $imagen = 'data:image/jpeg;base64,'.base64_encode( $img[0]['foto']);//'.$imagen.'
-        if ($value['id_categoria'] == 1) {
+        if ($value['id_categoria'] != 2) {
             $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
-        }elseif ($value['id_categoria'] == 2) {
+        }else {
             $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
         }
         $link = base_url('propiedades/ver/'.$value['id']);
         $precio = number_format($value['precio'], 2);
+        $descripcion = substr($value['descripcion'], 0, 90) . " [...]";
         echo<<<PROPIEDAD
                     <!-- Single Featured Property -->
                 <div class="col-12 col-md-6 col-xl-4">
@@ -269,7 +269,7 @@ class Propiedad_model extends CI_Model {
                         <div class="property-content">
                             <h5>{$value['nombre']}</h5>
                             <p class="location"><img src="{$base}/img/icons/location.png" alt="">{$value['direccion']}</p>
-                            <p>{$value['descripcion']}</p>
+                            <p>{$descripcion}</p>
                             <div class="property-meta-data d-flex align-items-end justify-content-between">
                                 <div class="new-tag">
                                     {$tipo}
