@@ -185,9 +185,9 @@ class Propiedad_model extends CI_Model {
     $body = '<html><head> <title>Nuevo Mensaje Acerca de '.$mailcontent->propiedad.'</title>
     </head>
     <body>
-      <p style="font-size: 18px; color:black;">Tienes un nuevo mensaje acerca de tu anuncio <strong>'.
+      <p style="font-size: 18px; color:black;">Tienes un nuevo mensaje '.$mailcontent->about.' anuncio <strong>'.
       $mailcontent->propiedad.'</strong> con el tema de <strong>'.$mailcontent->subject.' </strong>
-      de parte de <strong>'.$mailcontent->nombre.'</strong> que dice lo siguiente:</p>
+      de parte del '.$mailcontent->from.' <strong>'.$mailcontent->nombre.'</strong> que dice lo siguiente:</p>
       <p style="font-size: 16px;  color:black;">'.$mailcontent->mensaje.'</p>
     </body>
     </html>';

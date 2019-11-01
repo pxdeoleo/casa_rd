@@ -13,20 +13,15 @@ if($_POST){
     $mailcontent->subject = $_POST['tema'];
     $mailcontent->mensaje = $_POST['mensaje'];
     $mailcontent->propiedad = $propiedad['nombre'];
+    $mailcontent->from = "interesado";
+    $mailcontent->about = "acerca de tu";
     $this->propiedad_model->sendMail($mailcontent);
-    if((isset($mailcontent->reply) && $mailcontent->reply !="") && (isset($mailcontent->nombre)&& 
-    $mailcontent->nombre !="") && (isset($mailcontent->mensaje) && $mailcontent->mensaje !="")){
-        echo"
-        Swal.fire(
-            'Aviso!',
-            'Su Mensaje ha sido enviado con exito!    El propietario le responderá via correo electrónico en cuanto reciba el mensaje',
-            'success');";
     }
-}
+
 ?>
 
     <!-- Material Design -->
-  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <!-- ##### Breadcumb Area Start ##### -->
     <section class="breadcumb-area bg-img" style="background-image: url(<?=$base?>/img/bg-img/hero1.jpg);">
         <!-- <div class="container h-100">
@@ -300,7 +295,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
         </div>
         <div class="modal-body">
-        <form id="contact-form" method="post" role="form">
+        <form id="formform" method="post" role="form">
 
     <div class="messages"></div>
 
@@ -366,7 +361,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </div>
         </div>
         <div class="modal-footer">
-        <input type="submit" onclick="confirm()" class="btn btn-success btn-send" value="Enviar mensaje">
+        <input type="button" onclick="confirmation()" class="btn btn-success btn-send" value="Enviar mensaje">
         </div>
       </div>
       </form>
@@ -400,12 +395,27 @@ $('#MContactForm').on('show.bs.modal', function (event) {
   </script>
   <script>
 
-function confirm(){
-    Swal.fire(
-    'Aviso!',
-    'Su Mensaje ha sido enviado con exito!    El propietario le responderá via correo electrónico en cuanto reciba el mensaje',
-    'success');
+    function confirmation(){
+        var mensaje = document.getElementById('mensaje').value;
+    var nombre = document.getElementById('nombre').value;
+    var email = document.getElementById('email').value;
+    if(mensaje != "" && nombre != "" && email !="" ){
+        Swal.fire({
+  title: 'Aviso',
+  text: "Su Mensaje ha sido enviado con exito! El propietario le responderá via correo electrónico en cuanto reciba el mensaje",
+  type: 'success',
+  showCancelButton: false,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'OK'
+}).then((result) => {
+  if (result.value) {
+    document.getElementById('formform').submit();
+  }
+})
     }
+}
+
   </script>
 
 </body>

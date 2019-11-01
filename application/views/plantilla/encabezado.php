@@ -21,6 +21,9 @@ $base = base_url('base');
     <link rel="stylesheet" href="<?=$base?>/style.css">
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
 </head>
 
 <body>
