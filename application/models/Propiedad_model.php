@@ -165,6 +165,17 @@ class Propiedad_model extends CI_Model {
         ->result_array();
         return $propiedades;
     }
+
+    public function insertMessage($mailcontent){
+        $CI =& get_instance();
+        $mensaje= new stdClass();
+        $mensaje->nombre = $mailcontent->nombre;
+        $mensaje->de = $mailcontent->reply;
+        $mensaje->para = $mailcontent->recipient;
+        $mensaje->tema = $mailcontent->subject;
+        $mensaje->mensaje = $mailcontent->mensaje;
+        $CI->db->insert('mensaje',$mensaje);
+    }
     public function sendMail($mailcontent){
     $headers = 'From: Casas RD casarepdom@gmail.com' . "\r\n" .
     'Reply-To: '. $mailcontent->reply . "\r\n" .
@@ -181,6 +192,7 @@ class Propiedad_model extends CI_Model {
     </body>
     </html>';
     mail($mailcontent->recipient,$title,$body,$headers);
+    $this->propiedad_model->insertMessage($mailcontent);
     }
     public function showCard($value,$tipo){
         $base = base_url('base');

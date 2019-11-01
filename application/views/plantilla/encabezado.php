@@ -19,7 +19,8 @@ $base = base_url('base');
 
     <!-- Style CSS -->
     <link rel="stylesheet" href="<?=$base?>/style.css">
-
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 </head>
 
 <body>

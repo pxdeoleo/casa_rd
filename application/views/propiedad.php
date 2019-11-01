@@ -4,6 +4,7 @@ $base = base_url('base');
 $id_propiedad = $this->uri->segment(3);
 $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad)[0];
 
+
 if($_POST){ 
     $mailcontent = new stdClass();
     $mailcontent->recipient = $_POST['recipient'];
@@ -13,6 +14,14 @@ if($_POST){
     $mailcontent->mensaje = $_POST['mensaje'];
     $mailcontent->propiedad = $propiedad['nombre'];
     $this->propiedad_model->sendMail($mailcontent);
+    if((isset($mailcontent->reply) && $mailcontent->reply !="") && (isset($mailcontent->nombre)&& 
+    $mailcontent->nombre !="") && (isset($mailcontent->mensaje) && $mailcontent->mensaje !="")){
+        echo"
+        Swal.fire(
+            'Aviso!',
+            'Su Mensaje ha sido enviado con exito!    El propietario le responderá via correo electrónico en cuanto reciba el mensaje',
+            'success');";
+    }
 }
 ?>
 
@@ -128,8 +137,8 @@ if($_POST){
                             <div class="realtor---info">
                                 <h2><?=$usuario['nombre']?> <?=$usuario['apellido']?></h2>
                                 <p>Agente de Bienes Raices</p>
-                                <h6><img src="<?=$base?>/img/icons/phone-call.png" alt=""><?=$usuario['telefono']?></h6>
-                                <h6><img src="<?=$base?>/img/icons/envelope.png" alt=""><?=$usuario['correo']?></h6>
+                                <h6><a style="color: black;" href="tel://<?=$usuario['telefono']?>"><img src="<?=$base?>/img/icons/phone-call.png" alt="">+<?=$usuario['telefono']?></a></h6>
+                                <h6 style="color:black;"><img src="<?=$base?>/img/icons/envelope.png" alt=""><?=$usuario['correo']?></h6>
                                 <h6><button class="btn btn-success"><a style="color: white;"   href=" https://wa.me/<?=$usuario['telefono']?>"><i class="fa fa-whatsapp"></i> Contactar en Whatsapp</a></button></h6>
                                 <h6><button class="btn btn-secondary" type="button" class="btn btn-primary" data-toggle="modal" 
                                 data-target="#MContactForm" data-title="Formulario de Contacto"><i class="fa fa-envelope"></i> Enviar Mensaje</button></h6>
@@ -296,28 +305,29 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <div class="messages"></div>
 
     <div class="controls">
-    <div class="row">
-             <div class="col-md-7">
-            <div  style="display: inline-block;">
-            <label for="nombre">Para:</label>
-                    <input id="recipient" type="text" name="recipient" readonly class="form-control" value="<?=$usuario['correo']?>">
-           
-             </div>
-             </div>
-    </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div  class="form-group">
+                    <label for="nombre" style="display: inline-block;">Para:</label>
+                    <div style="display: inline-block;">
+                        <input id="recipient" type="text" name="recipient" readonly class="form-control" value="<?=$usuario['correo']?>">
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
              
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="nombre">Nombre *</label>
-                    <input id="nombre" type="text" name="nombre" class="form-control" placeholder="Digite su nombre "  data-error="Firstname is required.">
+                    <input id="nombre" type="text" name="nombre" class="form-control" required placeholder="Digite su nombre "  data-error="Firstname is required.">
                     <div class="help-block with-errors"></div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="apellido">Apellido</label>
-                    <input id="apellido" type="text" name="apellido" class="form-control" placeholder="Digite su Apellido"  data-error="Lastname is required.">
+                    <input id="apellido" type="text" name="apellido" class="form-control"  placeholder="Digite su Apellido"  data-error="Lastname is required.">
                     <div class="help-block with-errors"></div>
                 </div>
             </div>
@@ -326,7 +336,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="email">Email *</label>
-                    <input id="email" type="email" name="email" class="form-control" placeholder="Digite su correo electronico *" required="required" data-error="Valid email is required.">
+                    <input id="email" type="email" name="email" required class="form-control" placeholder="Digite su correo electronico *" required="required" data-error="Valid email is required.">
                     <div class="help-block with-errors"></div>
                 </div>
             </div>
@@ -348,7 +358,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="mensaje">Mensaje *</label>
-                    <textarea id="mensaje" name="mensaje" class="md-textarea form-control" rows="5" required="required" data-error="Please, leave us a message."></textarea>
+                    <textarea id="mensaje" name="mensaje" required class="md-textarea form-control" rows="5" required="required" data-error="Please, leave us a message."></textarea>
                     <div class="help-block with-errors"></div>
                 </div>
             </div>
@@ -356,7 +366,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </div>
         </div>
         <div class="modal-footer">
-        <input type="submit" class="btn btn-success btn-send" value="Enviar mensaje">
+        <input type="submit" onclick="confirm()" class="btn btn-success btn-send" value="Enviar mensaje">
         </div>
       </div>
       </form>
@@ -389,9 +399,15 @@ $('#MContactForm').on('show.bs.modal', function (event) {
   });
   </script>
   <script>
-  function enviarMensaje(){
-  }
+
+function confirm(){
+    Swal.fire(
+    'Aviso!',
+    'Su Mensaje ha sido enviado con exito!    El propietario le responderá via correo electrónico en cuanto reciba el mensaje',
+    'success');
+    }
   </script>
+
 </body>
 
 </html>
