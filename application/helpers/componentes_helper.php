@@ -1,4 +1,19 @@
 <?php
+    function convertir_divisa($source){
+        $app_id = "55f84dc08f414167bc44c34978d60aa3";
+        $url = "https://openexchangerates.org/api/latest.json?app_id=";
+        $request = $url . $app_id;
+
+        $client = curl_init($request);
+
+        curl_setopt($client,CURLOPT_RETURNTRANSFER,true);
+        $response = curl_exec($client);
+        
+        $result = json_decode($response);
+
+        return $source * $result->rates->DOP;
+        }
+
     function asgInput($nombre, $label, $opts=[]){
 
         $placeholder='';

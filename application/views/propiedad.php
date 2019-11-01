@@ -43,11 +43,14 @@ if($_POST){
             <div class="row">
                 <div class="col-12">
                     <!-- Single Listings Slides -->
+
                     <div class="single-listings-sliders owl-carousel">
-                        <!-- Single Slide -->
-                        <img src="<?=$base?>/img/bg-img/hero4.jpg" alt="">
-                        <!-- Single Slide -->
-                        <img src="<?=$base?>/img/bg-img/hero5.jpg" alt="">
+                    <?php 
+                         $img = $this->propiedad_model->imagenes_x_id($propiedad['id']);
+                         for($i=0; $i < count($img); $i++ ){
+                            echo '<img style="width:1150px; height:600px; object-fit:cover; overflow:hidden;" src= data:image/jpeg;base64,'.base64_encode( $img[$i]['foto']).' alt="">';
+                         }
+                    ?>
                     </div>
                 </div>
             </div>
@@ -57,11 +60,10 @@ if($_POST){
                     <div class="listings-content">
                         <!-- Price -->
                         <div class="list-price">
-                            <p>$<?=$propiedad['precio']?></p>
+                            <p>$<?= number_format($propiedad['precio'], 2);?></p>
                         </div>
                         <h5><?=$propiedad['nombre']?></h5>
                         <p class="location"><img src="<?=$base?>/img/icons/location.png" alt=""><?=$propiedad['direccion']?></p>
-                        <p><?=$propiedad['descripcion']?></p>
                         <!-- Meta -->
                         <div class="property-meta-data d-flex align-items-end">
                             <div class="new-tag">
@@ -88,9 +90,29 @@ if($_POST){
                                 <span><?=$propiedad['area']?> m²</span>
                             </div>
                         </div>
+                        <br>
+                        <hr>
+                        <p>
+                        <?php
+                            $descripcion = explode(PHP_EOL,$propiedad['descripcion']);
+                            echo('<ul>');
+                            foreach ($descripcion as $key => $value) {
+                                if($value != ""){
+                                    echo<<<CARACTERISTICA
+                                    <li>{$value}</li>
+CARACTERISTICA;
+                            echo("</ul>");
+                                }else{
+                                    echo("<br>");
+                                }
+                                
+                        }
+                        $descripcion?></p>
                         <?php
                             if ($propiedad['caracteristicas'] != ''){
-                                $caracteristicas = explode(',',$propiedad['caracteristicas']);
+                                $caracteristicas = explode(PHP_EOL,$propiedad['caracteristicas']);
+                                echo("<h2>Caracteristicas</h2>");
+
                                 echo('<ul class="listings-core-features d-flex align-items-center">');
                                    foreach ($caracteristicas as $key => $value) {
                                     echo<<<CARACTERISTICA
@@ -100,6 +122,8 @@ if($_POST){
                                 echo('</ul>');
                             }
                         ?>
+                        <div id="map" style="width: 700px; height: 500px"></div>
+
                         <!-- Core Features -->
                         <!-- <ul class="listings-core-features d-flex align-items-center">
                             <li><i class="fa fa-check" aria-hidden="true"></i> Gated Community</li>
@@ -125,10 +149,11 @@ if($_POST){
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="contact-realtor-wrapper">
                         <div class="realtor-info">
-                            <img src="<?=$base?>/img/bg-img/listing.jpg" alt="">
-                            <?php
+                        <?php
                             $usuario = $this->cuenta_model->usuario_x_id($propiedad['usuario_id'])[0];
                             ?>
+                            <img class="perfil" style="width:350px; height:350px; object-fit:cover; overflow:hidden;" src="<?= 'data:image/jpeg;base64,'.base64_encode($usuario['foto']);?>" alt="">
+                            
                             <div class="realtor---info">
                                 <h2><?=$usuario['nombre']?> <?=$usuario['apellido']?></h2>
                                 <p>Agente de Bienes Raices</p>
@@ -136,6 +161,7 @@ if($_POST){
                                 <h6 style="color:black;"><img src="<?=$base?>/img/icons/envelope.png" alt=""><?=$usuario['correo']?></h6>
                                 <h6><button class="btn btn-success"><a style="color: white;"   href=" https://wa.me/<?=$usuario['telefono']?>"><i class="fa fa-whatsapp"></i> Contactar en Whatsapp</a></button></h6>
                                 <h6><button class="btn btn-secondary" type="button" class="btn btn-primary" data-toggle="modal" 
+
                                 data-target="#MContactForm" data-title="Formulario de Contacto"><i class="fa fa-envelope"></i> Enviar Mensaje</button></h6>
                             </div>
                             <!-- <div class="realtor--contact-form">
@@ -417,6 +443,26 @@ $('#MContactForm').on('show.bs.modal', function (event) {
 }
 
   </script>
+
+    <script>
+    function main(){
+        var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom: 18, minZoom: 7, attribution: 'FranWilbRol'});
+
+        var map = L.map('map').setView([18.91668, -70.59814], 8).addLayer(osm);
+
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
+
+        L.marker([<?= $propiedad['latitud'] ?>, <?= $propiedad['longitud'] ?>]).addTo(map);
+
+    }
+    window.onload = main;
+
+</script>
 
 </body>
 

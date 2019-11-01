@@ -7,7 +7,6 @@ class Propiedades extends CI_Controller {
     public function index()
     {
         $this->load->model('propiedad_model');
-
         $this->load->view('propiedades');
     }
 
@@ -19,19 +18,22 @@ class Propiedades extends CI_Controller {
 
     public function agregar()
     {
+        $this->load->helper('componentes_helper');
+        $this->load->model('categoria_model');
         $this->load->model('propiedad_model');
         $this->load->view('agregar_propiedad');
     }
 
     public function editar($id=0){
         $this->load->model('propiedad_model');
+        $this->load->model('categoria_model');
         $this->load->view('editar_propiedad',['id'=>$id]);
     }
-
-    function borrar_propiedad($id=0){
+    
+    public function borrar($id=0){
         $this->load->model('propiedad_model');
-        Propiedad_model::borrar($id);
-        redirect('main/propiedad');
+        $this->propiedad_model->borrar_prop($id);
+        redirect('propiedades/mis_propiedades');
     }
 
     function mis_propiedades(){

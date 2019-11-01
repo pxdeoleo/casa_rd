@@ -1,7 +1,7 @@
 <?php
 session_start();
 $base = base_url('base');
-// $galerias = base_url('galerias');
+
 ?>
 
 <head>
@@ -10,7 +10,8 @@ $base = base_url('base');
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
     <!-- Title  -->
     <title>Casas RD - Agencia de bienes raices</title>
 
@@ -74,7 +75,7 @@ LOGIN;
                 <nav class="classy-navbar justify-content-between" id="southNav">
 
                     <!-- Logo -->
-                    <a class="nav-brand" href="<?=base_url("")?>">CasasRD <!-- <img src="<?=$base?>/img/core-img/logo.png" alt="">  --> </a>
+                    <a class="nav-brand" href="<?=base_url("")?>"><img src="<?=$base?>/img/core-img/logo.png" alt="">  </a>
 
                     <!-- Navbar Toggler -->
                     <div class="classy-navbar-toggler">
@@ -98,7 +99,7 @@ LOGIN;
                                 <?php
                                 if(isset($user)){
                                     echo('<li><a href="'.base_url('propiedades/mis_propiedades').'">Mis Propiedades</a></li>');
-                                    echo('<li><a href="'.base_url('propiedades/agregar').'">Agregar Propiedad</a></li>');
+                                    // echo('<li><a href="'.base_url('propiedades/agregar').'">Agregar Propiedad</a></li>');
                                 }
                                 ?>
                                 
