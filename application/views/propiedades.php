@@ -236,6 +236,7 @@ TIPOS;}
                 $propiedades = $this->propiedad_model->ultPropiedades();
                 foreach ($propiedades as $key => $value) {
                     $base = base_url('base');
+
                     if ($value['id_categoria'] =! 2) {
                         $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
                     }else {
