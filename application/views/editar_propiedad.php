@@ -9,7 +9,7 @@ if ($_POST) {
 $propiedad = new stdClass;
 $propiedad->id = '';
 if (isset($id)) {
-    $rs = Propiedad_model::propiedad_x_id($id);
+    $rs = $this->propiedad_model->propiedad_x_id($id);
     if (count($rs) > 0) {
         $propiedad = $rs[0];
     }

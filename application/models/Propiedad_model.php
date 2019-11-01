@@ -16,7 +16,43 @@ class Propiedad_model extends CI_Model {
             $CI->db->update('propiedades', $propiedad);
         }else{
             $CI->db->insert('propiedades', $propiedad);
+            $idP = $CI->db->query("select id from propiedades order by id desc limit 1;")->result_array();
+            $datos = array();
+            for($i = 0; $i < count($_FILES["foto"]["tmp_name"]); $i++){
+                if (is_uploaded_file($_FILES["foto"]["tmp_name"][$i])){
+                    if ($_FILES["foto"]["type"][$i]=="image/jpeg" || $_FILES["foto"]["type"][$i]=="image/pjpeg"
+                    || $_FILES["foto"]["type"][$i]=="image/gif" || $_FILES["foto"]["type"][$i]=="image/bmp" 
+                    || $_FILES["foto"]["type"][$i]=="image/png"){
+                        $datos[] = array(
+                            'foto' => file_get_contents($_FILES["foto"]["tmp_name"][$i]),
+                            'id_propiedad' => $idP[0]['id']
+                        ); 
+                    }
+                }
+            }
+            $CI ->db->insert_batch('imagenes_propiedad', $datos);
         }
+    }
+
+    public function imagen_x_id($id_propiedad){
+        $CI =& get_instance();
+
+        $propiedad = $CI->db
+        ->query("SELECT * FROM IMAGENES_PROPIEDAD WHERE ID_PROPIEDAD = $id_propiedad LIMIT 1")
+        ->result_array();
+
+        return $propiedad;
+    }
+
+    public function imagenes_x_id($id_propiedad){
+        $CI =& get_instance();
+
+        $propiedad = $CI->db
+        ->where("id_propiedad", $id_propiedad)
+        ->get('imagenes_propiedad')
+        ->result_array();
+
+        return $propiedad;
     }
 
     public function propiedades(){
@@ -151,6 +187,16 @@ class Propiedad_model extends CI_Model {
         return $propiedades;
     }
 
+    public function borrar_prop($id){
+        $CI =& get_instance();
+
+        $CI->db
+        ->query('DELETE FROM propiedades WHERE id='.$id);
+
+        $CI->db
+        ->query('DELETE FROM imagenes_propiedad WHERE id_propiedad='.$id);
+    }
+
     public function nuevo_filtro(){
         $filtro = new stdclass();
         $filtro->keyword = "";
@@ -177,28 +223,29 @@ class Propiedad_model extends CI_Model {
         return $propiedades;
     }
 
-    function showCard($value,$tipo){
+    public function showCard($value,$tipo){
         $base = base_url('base');
+        $img = $this->propiedad_model->imagen_x_id($value['id']);
+        $imagen = 'data:image/jpeg;base64,'.base64_encode( $img[0]['foto']);//'.$imagen.'
         if ($value['id_categoria'] == 1) {
             $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
         }elseif ($value['id_categoria'] == 2) {
             $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
         }
         $link = base_url('propiedades/ver/'.$value['id']);
-        
-echo<<<PROPIEDAD
+        $precio = number_format($value['precio'], 2);
+        echo<<<PROPIEDAD
                     <!-- Single Featured Property -->
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="single-featured-property mb-50 wow fadeInUp" data-wow-delay="100ms">
                         <!-- Property Thumbnail -->
                         <div class="property-thumb">
-                            <a href="{$link}"> <img src="{$base}/img/bg-img/feature1.jpg" alt=""></a>
-
+                            <a href="{$link}"> <img style="height:250px; object-fit:cover; overflow:hidden;"  src="$imagen" alt=""></a>
                             <div class="tag">
                                 <span>Disponible</span>
                             </div>
                             <div class="list-price">
-                                <p>{$value['precio']}</p>
+                                <p>{$value['moneda']} {$precio}</p>
                             </div>
                         </div>
                         <!-- Property Content -->
@@ -226,8 +273,7 @@ echo<<<PROPIEDAD
                             </div>
                         </div>
                     </div>
-                </div>        
-                    
+                </div>          
 PROPIEDAD;
     }
 

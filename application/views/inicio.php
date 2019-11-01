@@ -61,25 +61,29 @@ $base = base_url('base');
                 <?php
                     $propiedades = $this->propiedad_model->propiedades_dest();
                     foreach ($propiedades as $key => $value) {
-                        if ($value['id_categoria'] == 1) {
+                        $img = $this->propiedad_model->imagen_x_id($value['id']);
+
+                        if ($value['id_categoria'] != 2) {
                             $tipo = '<img src="'.$base.'/img/icons/flat.png" alt="Apartamento">';
-                        }elseif ($value['id_categoria'] == 2) {
+                        }else {
                             $tipo = '<img src="'.$base.'/img/icons/house2.png" alt="Casa">';
                         }
+                        $imagen = 'data:image/jpeg;base64,'.base64_encode($img[0]['foto']);
                         $link = base_url('propiedades/ver/'.$value['id']);
+                        $precio = number_format($value['precio'], 2);
+                        $moneda = $value['moneda'];
                     echo<<<PROPIEDAD
                     <!-- Single Featured Property -->
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="single-featured-property mb-50 wow fadeInUp" data-wow-delay="100ms">
                         <!-- Property Thumbnail -->
                         <div class="property-thumb">
-                            <a href="{$link}"><img src="{$base}/img/bg-img/feature1.jpg" alt=""></a>
-
+                            <a href="{$link}"><img style="height:250px; object-fit:cover; overflow:hidden;" src="$imagen" alt=""></a>
                             <div class="tag">
                                 <span>Disponible</span>
                             </div>
                             <div class="list-price">
-                                <p>{$value['precio']}</p>
+                                <p>{$moneda} {$precio}</p>
                             </div>
                         </div>
                         <!-- Property Content -->
@@ -90,7 +94,6 @@ $base = base_url('base');
                             <div class="property-meta-data d-flex align-items-end justify-content-between">
                                 <div class="new-tag">
                                     {$tipo}
-                                    
                                 </div>
                                 <span>{$value['hab']} dorm.</span>
 

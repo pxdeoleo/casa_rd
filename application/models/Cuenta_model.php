@@ -15,6 +15,15 @@ class Cuenta_model extends CI_Model {
             $CI->db->where('id', $usuario['id']);
             $CI->db->update('usuarios', $usuario);
         }else{
+            if (is_uploaded_file($_FILES["foto"]["tmp_name"])){
+                if ($_FILES["foto"]["type"]=="image/jpeg" || $_FILES["foto"]["type"]=="image/pjpeg"
+                || $_FILES["foto"]["type"]=="image/gif" || $_FILES["foto"]["type"]=="image/bmp" 
+                || $_FILES["foto"]["type"]=="image/png"){
+                    
+                $usuario['foto'] = file_get_contents($_FILES["foto"]["tmp_name"]);
+                     
+                }
+            }
             $CI->db->insert('usuarios', $usuario);
         }
     }

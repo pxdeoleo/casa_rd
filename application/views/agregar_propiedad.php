@@ -1,5 +1,9 @@
 <?php
 session_start();
+ini_set('upload_max_filesize', '20M');
+ini_set('post_max_size', '20M');
+ini_set('max_input_time', 300);
+ini_set('max_execution_time', 300);
 if ($_POST) {
 	$propiedad = $_POST;
 	$propiedad['usuario_id'] = $_SESSION['id_usuario'];
@@ -42,24 +46,24 @@ $base = base_url('base');
 <body>
 	<div class="container-contact100">
 		<div class="wrap-contact100">
-			<form method="post" class="contact100-form validate-form">
+			<form method="post" class="contact100-form validate-form" enctype="multipart/form-data">
 				<span class="contact100-form-title">
 					Agregar Propiedad
 				</span>
 
 				<div class="wrap-input100 validate-input bg1" data-validate="Porfavor no dejar el campo vacío">
-					<span class="label-input100">Nombre completo *</span>
-					<input class="input100" type="text" name="nombre" placeholder="Introducir Nombre">
+					<span class="label-input100">Nombre del anuncio*</span>
+					<input class="input100"type="text" name="nombre" placeholder="Introducir Nombre" required>
 				</div>
 
-				<div class="wrap-input100 validate-input bg1" data-validate = "Porfavor no dejar el campo vacío (e@a.x)">
+				<div class="wrap-input100 validate-input bg1" data-validate = "Porfavor no dejar el campo vacío (e@a.x)" required>
 					<span class="label-input100">Dirección</span>
-					<input class="input100" type="text" name="direccion" placeholder="Introducir Dirección ">
+					<input class="input100" type="text" name="direccion" placeholder="Introducir Dirección " required>
 				</div>
 
 				<div class="wrap-input100 bg1">
 					<span class="label-input100">Sector</span>
-					<input class="input100" type="text" name="sector" placeholder="Introducir Sector">
+					<input class="input100" type="text" name="sector" placeholder="Introducir Sector" required>
 					<datalist id="sectores">
 						<?php
 							$ciudades = $this->propiedad_model->ciudades();
@@ -73,7 +77,7 @@ $base = base_url('base');
 
 				<div class="wrap-input100 bg1 rs1-wrap-input100">
 					<span class="label-input100">Ciudad</span>
-					<input class="input100" type="text" list="ciudades" name="ciudad" placeholder="Introducir Ciudad">
+					<input class="input100" type="text" list="ciudades" name="ciudad" placeholder="Introducir Ciudad" required>
 					<datalist id="ciudades">
 						<?php
 							$ciudades = $this->propiedad_model->ciudades();
@@ -88,8 +92,8 @@ $base = base_url('base');
 				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
 					<span class="label-input100">Categoria</span>
 					<div>
-						<select class="js-select2" name="id_categoria">
-							<option>Seleccionar Categoria</option>
+						<select class="js-select2" name="id_categoria" required>
+							<option selected disabled>Seleccionar Categoria</option>
 							<?php
 								$categorias = $this->categoria_model->get_categorias();
 								foreach ($categorias as $key => $value) {
@@ -103,12 +107,12 @@ $base = base_url('base');
 				
 				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
 					<span class="label-input100">Parqueos</span>
-					<input class="input100" type="number" name="par" min="0">
+					<input class="input100" type="number" name="par" min="0" required>
 				</div>
 
 				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
 					<span class="label-input100">Area en m²</span>
-					<input class="input100" type="number" name="area" placeholder="Introducir Area en m²" min="0">
+					<input class="input100" type="number" name="area" placeholder="Introducir Area en m²" min="0" required>
 				</div>
 
 
@@ -118,7 +122,17 @@ $base = base_url('base');
 				</div>
 
 				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
+					<div class="row">
 					<span class="label-input100">Precio*</span>
+
+						<div class="clear-select">
+							<select style="background: #f7f7f7; height: 20px; border:0px; outline:0px; font-size:13px;" name="moneda">
+								<option selected disabled style="font-size:12px;">Moneda</option>
+								<option value="RD$" style="font-size:12px;">RD$</option>
+								<option value="USD"style="font-size:12px;">USD</option>
+							</select>
+						</div>
+					</div>
 					<input class="input100" type="number" name="precio" required min="0">
 				</div>
 
@@ -131,7 +145,10 @@ $base = base_url('base');
 					<span class="label-input100">Características</span>
 					<textarea class="input100" name="caracteristicas" placeholder="Caracterisitca 1, Caracterisitca 2, Caracterisitca 3 "></textarea>
 				</div>
-
+				<div class="wrap-input100 validate-input bg1">
+					<span class="label-input100">Imagenes de la propiedad</span>
+					<input class="input100" type="file" name="foto[]" multiple required>
+				</div>
 				<div class="container-contact100-form-btn">
 					<button class="contact100-form-btn">
 						<span>
@@ -141,12 +158,7 @@ $base = base_url('base');
 					</button>
 				</div>
 				<div class="container-contact100-form-btn">
-					<button class="contact100-form-btn">
-						<span>
-							Volver
-							<i class=" m-l-7" aria-hidden="true"></i>
-						</span>
-					</button>
+					<a href="<?= base_url('/propiedades');?>" class="contact100-form-btn"  style='text-decoration:none;color:white;'> Volver</a>
 				</div>
 			</form>
 		</div>

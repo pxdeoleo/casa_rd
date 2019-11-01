@@ -45,72 +45,6 @@ $propiedades = $this->propiedad_model->propiedades_x_usuario($id_usuario);
         </div>
     </div>
 
-    <!-- ***** Header Area Start ***** -->
-
-    <!--
-    <header class="header_area" id="header">
-        <div class="container-fluid h-100">
-            <div class="row h-100">
-                <div class="col-12 h-100">
-                    <nav class="h-100 navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index.html"><img src="img/core-img/logo.png" alt=""></a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#dorneNav" aria-controls="dorneNav" aria-expanded="false" aria-label="Toggle navigation"><span class="fa fa-bars"></span></button>
-
-                        <-- Nav ->
-
-                        <div class="collapse navbar-collapse" id="dorneNav">
-                            <ul class="navbar-nav mr-auto" id="dorneMenu">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Explore <i class="fa fa-angle-down" aria-hidden="true"></i></a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="index.html">Home</a>
-                                        <a class="dropdown-item" href="explore.html">Explore</a>
-                                        <a class="dropdown-item" href="listing.html">Listing</a>
-                                        <a class="dropdown-item" href="single-listing.html">Single Listing</a>
-                                        <a class="dropdown-item" href="contact.html">Contact</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item active dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Listings <i class="fa fa-angle-down" aria-hidden="true"></i></a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                                        <a class="dropdown-item" href="index.html">Home</a>
-                                        <a class="dropdown-item" href="explore.html">Explore</a>
-                                        <a class="dropdown-item" href="listing.html">Listing</a>
-                                        <a class="dropdown-item" href="single-listing.html">Single Listing</a>
-                                        <a class="dropdown-item" href="contact.html">Contact</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="contact.html">Contact</a>
-                                </li>
-                            </ul>
-                            <-- Search btn ->
-                            <div class="dorne-search-btn">
-                                <a id="search-btn" href="#"><i class="fa fa-search" aria-hidden="true"></i> Search</a>
-                            </div>
-                            <-- Signin btn ->
-                            <div class="dorne-signin-btn">
-                                <a href="#">Sign in  or Register</a>
-                            </div>
-                            <-- Add listings btn ->
-                            <div class="dorne-add-listings-btn">
-                                <a href="#" class="btn dorne-btn">+ Add Listings</a>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </header>
-    <-- ***** Header Area End ***** -->
-
-    <!-- ***** Breadcumb Area Start ***** ->
-    <div class="breadcumb-area bg-img bg-overlay" style="background-image: url(img/bg-img/hero-1.jpg)"></div>
-    <-- ***** Breadcumb Area End ***** -->
-
     <!-- ***** Listing Destinations Area Start ***** -->
     <section class="dorne-listing-destinations-area section-padding-100-50">
         <div class="container">
@@ -119,197 +53,54 @@ $propiedades = $this->propiedad_model->propiedades_x_usuario($id_usuario);
                     <div class="section-heading dark text-center">
                         <span></span>
                         <h4>Todas mis propiedades</h4>
-                        <p>Edición o eliminación de propiedades</p>
-
+                        <p>Registro, edición o eliminación de propiedades</p>
                         <br>
-
                         <!-- Add listings btn -->
                             <div class="dorne-add-listings-btn">
-                                <a href="#" class="btn dorne-btn">+ Agregar propiedades</a>
+                                <a href="<?=base_url('propiedades/agregar')?>" class="btn dorne-btn">+ Agregar propiedades</a>
                             </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <!-- Single Features Area -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="<?=$base?>/img/bg-img/feature-1.jpg" alt="">
-                        <!-- Price -->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Ibiza</h5>
-                                <p>Party</p>
+                <?php
+                foreach ($propiedades as $key => $value) {
+                    $img = $this->propiedad_model->imagen_x_id($value['id']);
+                    
+                    $imagen = 'data:image/jpeg;base64,'.base64_encode($img[0]['foto']);
+                    $url_borrar = base_url('propiedades/borrar/'.$value['id']);
+                    $url_editar = base_url('propiedades/editar/'.$value['id']);
+                    $precio = number_format($value['precio'], 2);
+                    $url_ver = base_url('propiedades/ver/'.$value['id']);
+                    echo<<<PROPIEDAD
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="single-features-area mb-50">
+                            <a href="{$url_ver}"><img style="height:200px; width: 400; object-fit:cover; overflow:hidden;" src="{$imagen}" alt=""></a>
+                            <!-- Price -->
+                            <div class="price-start">
+                                <p>RD$ $precio</p>
                             </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-edit" aria-hidden="true"></i></a> &nbsp;
-                                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                            </div>  
+                            <div class="feature-content d-flex align-items-center justify-content-between">
+                                <div class="feature-title">
+                                    <h5>{$value['nombre']}</h5>
+                                    <p>{$value['sector']}</p>
+                                </div>
+                                <div class="feature-favourite">
+                                    <a href="{$url_editar}"><i class="fa fa-edit" aria-hidden="true"></i></a> &nbsp;
+                                    <a href="{$url_borrar}" onclick="return confirm('¿Esta seguro?')"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                </div>  
+                            </div>
                         </div>
                     </div>
-                </div>
+PROPIEDAD;
+                }
 
-                <!-- Single Features Area -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="<?=$base?>/img/bg-img/feature-2.jpg" alt="">
-                        <!-- Price -->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Paris</h5>
-                                <p>Luxury</p>
-                            </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-edit" aria-hidden="true"></i></a> &nbsp;
-                                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single Features Area -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="<?=$base?>/img/bg-img/feature-3.jpg" alt="">
-                        <!-- Price -->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Lake Como</h5>
-                                <p>Spectacular</p>
-                            </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-edit" aria-hidden="true"></i></a> &nbsp;
-                                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single Features Area -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="<?=$base?>/img/bg-img/feature-4.jpg" alt="">
-                        <!-- Price -->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Greece</h5>
-                                <p>Sunny</p>
-                            </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single Features Area -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="<?=$base?>/img/bg-img/feature-5.jpg" alt="">
-                        <!-- Price -->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Norway</h5>
-                                <p>All Year round</p>
-                            </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single Features Area -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="<?=$base?>/img/bg-img/feature-1.jpg" alt="">
-                        <!-- Price -->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Ibiza</h5>
-                                <p>Party</p>
-                            </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single Features Area ->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="img/bg-img/feature-2.jpg" alt="">
-                        <-- Price ->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Paris</h5>
-                                <p>Luxury</p>
-                            </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <-- Single Features Area ->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="img/bg-img/feature-3.jpg" alt="">
-                        <-- Price ->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Lake Como</h5>
-                                <p>Spectacular</p>
-                            </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <-- Single Features Area ->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-features-area mb-50">
-                        <img src="img/bg-img/feature-4.jpg" alt="">
-                        <-- Price ->
-                        <div class="price-start">
-                            <p>FROM $59/night</p>
-                        </div>
-                        <div class="feature-content d-flex align-items-center justify-content-between">
-                            <div class="feature-title">
-                                <h5>Greece</h5>
-                                <p>Sunny</p>
-                            </div>
-                            <div class="feature-favourite">
-                                <a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                ?>
             </div>
         </div>
     </section>
-    <-- ***** Listing Destinations Area End ***** -->
+    <!-- ***** Listing Destinations Area End ***** -->
 
     <!-- ****** Footer Area Start ****** ->
     <footer class="dorne-footer-area">

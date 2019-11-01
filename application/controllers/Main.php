@@ -10,9 +10,6 @@ class Main extends CI_Controller {
         $this->load->view('inicio');
     }
 
-    
-
-
 }
 
 /* End of file Controllername.php */

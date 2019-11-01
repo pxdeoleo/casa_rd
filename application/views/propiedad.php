@@ -3,9 +3,21 @@ plantilla::aplicar();
 $base = base_url('base');
 $id_propiedad = $this->uri->segment(3);
 $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad)[0];
+
+if($_POST){ 
+    $mailcontent = new stdClass();
+    $mailcontent->recipient = $_POST['recipient'];
+    $mailcontent->reply = $_POST['email'];
+    $mailcontent->nombre = $_POST['nombre']." ".$_POST['apellido'];
+    $mailcontent->subject = $_POST['tema'];
+    $mailcontent->mensaje = $_POST['mensaje'];
+    $mailcontent->propiedad = $propiedad['nombre'];
+    $this->propiedad_model->sendMail($mailcontent);
+}
 ?>
 
-
+    <!-- Material Design -->
+  
     <!-- ##### Breadcumb Area Start ##### -->
     <section class="breadcumb-area bg-img" style="background-image: url(<?=$base?>/img/bg-img/hero1.jpg);">
         <!-- <div class="container h-100">
@@ -27,11 +39,14 @@ $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad)[0];
             <div class="row">
                 <div class="col-12">
                     <!-- Single Listings Slides -->
+
                     <div class="single-listings-sliders owl-carousel">
-                        <!-- Single Slide -->
-                        <img src="<?=$base?>/img/bg-img/hero4.jpg" alt="">
-                        <!-- Single Slide -->
-                        <img src="<?=$base?>/img/bg-img/hero5.jpg" alt="">
+                    <?php 
+                         $img = $this->propiedad_model->imagenes_x_id($propiedad['id']);
+                         for($i=0; $i < count($img); $i++ ){
+                            echo '<img style="width:1150px; height:600px; object-fit:cover; overflow:hidden;" src= data:image/jpeg;base64,'.base64_encode( $img[$i]['foto']).' alt="">';
+                         }
+                    ?>
                     </div>
                 </div>
             </div>
@@ -41,7 +56,7 @@ $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad)[0];
                     <div class="listings-content">
                         <!-- Price -->
                         <div class="list-price">
-                            <p>$<?=$propiedad['precio']?></p>
+                            <p>$<?= number_format($propiedad['precio'], 2);?></p>
                         </div>
                         <h5><?=$propiedad['nombre']?></h5>
                         <p class="location"><img src="<?=$base?>/img/icons/location.png" alt=""><?=$propiedad['direccion']?></p>
@@ -109,15 +124,19 @@ $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad)[0];
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="contact-realtor-wrapper">
                         <div class="realtor-info">
-                            <img src="<?=$base?>/img/bg-img/listing.jpg" alt="">
-                            <?php
+                        <?php
                             $usuario = $this->cuenta_model->usuario_x_id($propiedad['usuario_id'])[0];
                             ?>
+                            <img class="perfil" style="width:350px; height:350px; object-fit:cover; overflow:hidden;" src="<?= 'data:image/jpeg;base64,'.base64_encode($usuario['foto']);?>" alt="">
+                            
                             <div class="realtor---info">
                                 <h2><?=$usuario['nombre']?> <?=$usuario['apellido']?></h2>
                                 <p>Agente de Bienes Raices</p>
                                 <h6><img src="<?=$base?>/img/icons/phone-call.png" alt=""><?=$usuario['telefono']?></h6>
                                 <h6><img src="<?=$base?>/img/icons/envelope.png" alt=""><?=$usuario['correo']?></h6>
+                                <h6><button class="btn btn-success btn-block"><a style="color: white;" target="_blank"  href=" https://wa.me/<?=$usuario['telefono']?>"><i class="fa fa-whatsapp"></i> Contactar en Whatsapp</a></button></h6>
+                                <h6><button class="btn btn-secondary btn-block" type="button" class="btn btn-primary" data-toggle="modal" 
+                                data-target="#MContactForm" data-title="Formulario de Contacto"><i class="fa fa-envelope"></i> Enviar Mensaje</button></h6>
                             </div>
                             <!-- <div class="realtor--contact-form">
                                 <form action="#" method="post">
@@ -253,7 +272,7 @@ $propiedad = $this->propiedad_model->propiedad_x_id($id_propiedad)[0];
                 </div>
             </div>
         </div>
-
+        
         <!-- Copywrite Text -->
         <div class="copywrite-text d-flex align-items-center justify-content-center">
             <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
@@ -263,6 +282,91 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </footer>
     <!-- ##### Footer Area End ##### -->
 
+<!-- Modal Contacto -->
+<div class="modal fade" id="MContactForm" role="dialog">
+    <div class="modal-dialog">
+        <br><br><br>
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+    
+        <h4 class="modal-title"></h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        </div>
+        <div class="modal-body">
+        <form id="contact-form" method="post" role="form">
+
+    <div class="messages"></div>
+
+    <div class="controls">
+    <div class="row">
+             <div class="col-md-7">
+            <div  style="display: inline-block;">
+            <label for="nombre">Para:</label>
+                    <input id="recipient" type="text" name="recipient" readonly class="form-control" value="<?=$usuario['correo']?>">
+           
+             </div>
+             </div>
+    </div>
+        <div class="row">
+             
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input id="nombre" type="text" name="nombre" class="form-control" placeholder="Digite su nombre "  data-error="Firstname is required.">
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="apellido">Apellido</label>
+                    <input id="apellido" type="text" name="apellido" class="form-control" placeholder="Digite su Apellido"  data-error="Lastname is required.">
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input id="email" type="email" name="email" class="form-control" placeholder="Digite su correo electronico *" required="required" data-error="Valid email is required.">
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="form_need">Tema *</label>
+                    <select id="tema" name="tema" class="form-control"  data-error="Please specify your need.">
+                        <option value=""></option>
+                        <option value="Solicitar Visita">Solicitar Visita</option>
+                        <option value="Acerca del inmueble">Acerca del inmueble</option>
+                        <option value="Contactos">Contactos</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="mensaje">Mensaje *</label>
+                    <textarea id="mensaje" name="mensaje" class="md-textarea form-control" rows="5" required="required" data-error="Please, leave us a message."></textarea>
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+        <div class="modal-footer">
+        <input type="submit" class="btn btn-success btn-send" value="Enviar mensaje">
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+  <!-- Fin Modal -->
     <!-- jQuery (Necessary for All JavaScript Plugins) -->
     <script src="<?=$base?>/js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->
@@ -278,7 +382,20 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <!-- Google Maps -->
     <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwuyLRa1uKNtbgx6xAJVmWy-zADgegA2s"></script> -->
     <script src="<?=$base?>/js/map-active.js"></script>
+            <!-- JAVASCRIPT PARA QUE APAREZCA EL TITULO DEL MODAL -->
+            <script>
+$('#MContactForm').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)  // Boton que abrio el Modal
+  var titulo = button.data('title');
+  var modal = $(this)
+  modal.find('.modal-title').text(titulo);
 
+  });
+  </script>
+  <script>
+  function enviarMensaje(){
+  }
+  </script>
 </body>
 
 </html>
